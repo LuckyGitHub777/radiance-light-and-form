@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="A lightweight, offline-capable visual workspace with geometric patterns, optional motion, a focus timer, and transparent energy-cost estimates.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-X111a9zrwAbWZ3AUQ9I1nf3kRdtfk8I0Av3vZXlKZ3o='; script-src 'sha256-6MuAXRtWtSQUf15Su/cHHOG0GIuc/fwZUlSWoIT1/hI='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Radiance — Quiet Visual Workspace</title>
+<style>
+:root{--bg:#080d17;--panel:#111c2c;--line:#304050;--text:#f6f4eb;--muted:#a7b7c5;--gold:#ebc985;--teal:#8be1d0;--good:#a8e6bf;--warm:#edb6aa;--accent:#ebc985;--accent2:#8be1d0}
+*{box-sizing:border-box}
+html{background:#080d17;height:100%}
+body{margin:0;min-height:100%;font-family:Segoe UI,Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(ellipse 70% 48% at 65% -20%,#22384b 0,transparent 75%),linear-gradient(142deg,#080d17,#101926 62%,#0a1620);line-height:1.45;font-size:15px}
+button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:3px}button:disabled{opacity:.5;cursor:default}
+.skip{position:absolute;top:-60px;left:16px;z-index:99;padding:10px;color:#000;background:#fff}.skip:focus{top:8px}
+.shell{width:100%;max-width:1350px;margin:auto;padding:24px 32px 35px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:22px;border-bottom:1px solid #ffffff20}
+.logo{display:flex;align-items:center;gap:13px;text-decoration:none;color:var(--text)}
+.glyph{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#f4ddae 0,#b4915b 26%,#293b4a 40%,#0f1a24 65%);border:1px solid #ad9366;box-shadow:0 0 24px #cdb27420;font-size:24px}
+.brand{font-size:14px;letter-spacing:.18em;font-weight:700}.subbrand{color:var(--muted);font-size:11px;letter-spacing:.05em}
+.top-right{display:flex;align-items:center;gap:17px}.pill{border:1px solid #49676b;background:#1a3039;border-radius:99px;color:#d1eee6;padding:6px 12px;font-size:11px;white-space:nowrap}
+.time{font-variant-numeric:tabular-nums;color:#cad7dc;font-size:15px;min-width:73px;text-align:right}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:30px 0 22px}.eyebrow{text-transform:uppercase;letter-spacing:.22em;color:var(--gold);font-size:11px;font-weight:650}.hero h1{font-size:clamp(29px,4.4vw,60px);line-height:1.07;letter-spacing:-.048em;font-weight:450;margin:10px 0}.hero p{color:var(--muted);margin:0;max-width:620px}.quiet{font-size:12px;color:var(--muted);text-align:right}
+.layout{display:grid;grid-template-columns:minmax(0,1.67fr) minmax(280px,.72fr);gap:18px}
+.panel{border:1px solid #344355;border-radius:17px;background:linear-gradient(140deg,#142235e6,#101b2acc);overflow:hidden}
+.stage{height:440px;display:flex;align-items:center;justify-content:center;position:relative;isolation:isolate;background:radial-gradient(ellipse 57% 60% at 50% 48%,#172d3a 0,transparent 80%),radial-gradient(ellipse 45% 36% at 50% 45%,#5b4a3633 0,transparent 85%);transition:background-color .4s}
+.stage:before{content:"";position:absolute;inset:18px;border:1px solid #ffffff0a;border-radius:12px;pointer-events:none}
+.gridline{position:absolute;inset:0;opacity:.1;pointer-events:none;background-image:linear-gradient(#8bbbc41a 1px,transparent 1px),linear-gradient(90deg,#8bbbc41a 1px,transparent 1px);background-size:56px 56px}
+.orbit{height:min(64vw,340px);width:min(64vw,340px);position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:.94;}
+.orbit .petal{stroke:var(--accent);stroke-width:.55;fill:none;opacity:.46}.orbit .tracer{stroke:var(--accent2);stroke-width:.7;fill:none;opacity:.38}.orbit .outer{stroke:var(--accent);stroke-width:.6;fill:none;opacity:.56}.orbit .core{fill:#d8e6d8;opacity:.8}.orbit g.spin{transform-origin:160px 160px}
+.stage.moving .orbit g.spin{animation:orbit 200s linear infinite}
+@keyframes orbit{to{transform:rotate(360deg)}}
+.stage::after{content:"";position:absolute;bottom:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,#d9bd7640,transparent)}
+.stage-message{position:relative;z-index:2;text-align:center;margin-top:315px;width:100%;padding:0 22px;pointer-events:none;text-shadow:0 2px 11px #0a0d17}
+.stage-message strong{font-size:21px;letter-spacing:.015em;font-weight:450;display:block}.stage-message span{display:block;color:#d7dce1;font-size:12px;margin-top:3px}
+.fullscreen-control{position:absolute;top:32px;right:35px;z-index:4}
+button.ghost{background:#0e1b2acb;border:1px solid #456073;color:#e2eceb;border-radius:8px;padding:9px 12px;font-size:12px}
+.stage-info{position:absolute;left:35px;top:32px;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#b2cbd2}
+.stage-tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-top:1px solid #314152}
+.button-group{display:flex;gap:8px;flex-wrap:wrap}.action{background:#3b5762;color:#f8fbf9;border:1px solid #64818a;border-radius:9px;padding:10px 14px;font-size:13px;min-height:39px}.action:hover{background:#4c6a75}.secondary{background:transparent;border:1px solid #4a5d6d;color:#d9e7e6}.secondary:hover{background:#1c3240}
+.select-wrap{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}.select-wrap select{background:#102333;color:var(--text);border:1px solid #425665;border-radius:8px;padding:9px 22px 9px 10px;max-width:160px}
+.side{display:flex;flex-direction:column;gap:15px}.sidebox{padding:23px}.sidebox h2,.detailbox h2{font-size:18px;letter-spacing:-.02em;font-weight:550;margin:5px 0 9px}.sidebox p{font-size:13px;color:var(--muted);margin:0 0 15px}.modes{display:flex;flex-wrap:wrap;gap:7px}.modepick{border:1px solid #455767;border-radius:9px;padding:8px 12px;color:#d2e0df;background:#152536;font-size:12px}.modepick[aria-pressed=true]{color:#1b1c20;background:var(--gold);border-color:var(--gold)}
+.intention{margin:12px 0 7px;color:#f2e4c8;font-weight:450;font-size:23px;line-height:1.25;letter-spacing:-.03em}.small{color:var(--muted);font-size:12px}.rule{height:1px;background:#354658;margin:16px 0}
+.timerrow{display:flex;align-items:center;justify-content:space-between;gap:12px}.timer{font-size:37px;font-variant-numeric:tabular-nums;letter-spacing:.02em;color:var(--teal)}.session-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.offline{display:flex;align-items:center;gap:8px;color:#a6ded0;font-size:12px}.dot{width:7px;height:7px;border-radius:50%;background:#96dbc4;display:inline-block}
+.nav{margin:24px 0 15px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid #344355;padding-bottom:12px}.nav button{background:none;color:#acbfcc;border:none;border-bottom:2px solid transparent;padding:11px 15px;min-width:100px;text-align:center}.nav button[aria-selected=true]{color:#f9f5ed;border-color:var(--gold)}.nav button:hover{color:white}
+.content{display:grid;grid-template-columns:1.4fr 1fr;gap:17px}.detailbox{padding:23px 24px}.detailbox p{color:var(--muted);font-size:13px;margin:0 0 14px}.value{font-size:34px;color:#b5e0d3;font-weight:450;letter-spacing:-.03em}.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:#c4d0d8}.field input{border-radius:8px;background:#0b1828;border:1px solid #405367;color:#f7f6ef;padding:11px;min-width:0;width:100%;font-size:15px}
+.metricrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:17px}.metric{background:#0e1a29;border:1px solid #304254;border-radius:11px;padding:15px}.metric span{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.metric strong{font-size:24px;font-weight:500;color:#e9e6da;font-variant-numeric:tabular-nums}.metric strong.positive{color:#ace8cc}.metric strong.negative{color:#efaf9f}
+.intent-quote{font-size:21px;color:#f0e1c4;letter-spacing:-.025em;max-width:550px}.tiny{font-size:11px;color:var(--muted)}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.step{border:1px solid #364959;border-radius:12px;padding:17px}.step b{color:var(--gold);font-size:11px;letter-spacing:.12em}.step strong{display:block;margin-top:7px;font-weight:500}.step small{display:block;color:var(--muted);margin-top:5px}
+.focusline{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}.focusline .field{flex:1;min-width:220px}.focusline .action{margin-bottom:1px}.receipt{margin-top:16px;background:#102634;border-left:2px solid #80bdb4;border-radius:6px;padding:13px;color:#d5eae2;font-size:13px;min-height:48px}
+.footer{border-top:1px solid #ffffff1c;margin-top:25px;padding-top:17px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;color:var(--muted);font-size:11px}
+#panel-presence[hidden],#panel-focus[hidden],#panel-return[hidden],#panel-about[hidden]{display:none}
+/* Immersive view hides dashboard UI but keeps exit accessible; static by default. */
+body.immersive{background:#070c13}body.immersive .top,body.immersive .hero,body.immersive .side,body.immersive .stage-tools,body.immersive .nav,body.immersive .content,body.immersive .footer{display:none!important}
+body.immersive .shell{max-width:none;margin:0;padding:0}body.immersive .layout{display:block}body.immersive .stage{border:none;border-radius:0;height:100vh;min-height:300px;background:radial-gradient(ellipse 48% 56% at 50% 47%,#182f39,transparent 76%),#070c13}
+body.immersive .orbit{height:min(65vh,65vw);width:min(65vh,65vw)}body.immersive .stage-message{margin-top:min(65vh,480px)}body.immersive .stage-message strong{font-size:clamp(23px,3vw,38px)}
+@media(max-width:1030px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.content{grid-template-columns:1fr}.stage{height:380px}.stage-message{margin-top:275px}}
+@media(max-width:650px){.shell{padding:16px}.top{padding-bottom:15px}.top-right{gap:8px}.time{font-size:13px}.pill{display:none}.hero{margin-top:22px}.quiet{display:none}.side{grid-template-columns:1fr}.stage{height:345px}.stage-message{margin-top:246px}.orbit{height:280px;width:280px}.stage-info{left:22px;top:18px}.fullscreen-control{top:16px;right:16px}.stage-tools{padding:12px}.formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.metricrow{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.nav{gap:3px}.nav button{min-width:0;flex:1;padding:10px 5px;font-size:12px}.sidebox,.detailbox{padding:20px}body.immersive .stage-message{margin-top:60vh}}
+@media(max-width:390px){.time{display:none}.formgrid{grid-template-columns:1fr}.stage{height:310px}.orbit{width:240px;height:240px}.stage-message{margin-top:223px}.select-wrap select{max-width:130px}.stage-tools{align-items:flex-start}.stage-tools .button-group{width:100%}}
+@media(prefers-reduced-motion:reduce){.stage.moving .orbit g.spin{animation:none!important}*{scroll-behavior:auto!important;transition:none!important}}
+
+
+/* Original mathematically generated light studies */
+.pattern-strip{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:0 18px 16px}
+.pattern-strip .caption{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.pattern-buttons{display:flex;flex-wrap:wrap;gap:6px}
+.pattern-button{background:#112436;border:1px solid #456172;color:#d4e6e7;padding:7px 12px;min-height:35px;border-radius:8px;font-size:12px}
+.pattern-button[aria-pressed=true]{background:#294a51;border-color:#91c8b4;color:#fff}
+.pattern-group{display:none}
+.pattern-group.active{display:inline}
+.orbit .pattern-group circle,.orbit .pattern-group path,.orbit .pattern-group ellipse{stroke:var(--accent);fill:none;stroke-width:.75;opacity:.5;vector-effect:non-scaling-stroke}
+.orbit .pattern-group .secondary-stroke{stroke:var(--accent2);opacity:.52}
+.stage .orbit{will-change:auto}
+.stage.moving .orbit g.pattern-spin{animation:orbit 200s linear infinite;transform-origin:160px 160px}
+.stage.suspended .orbit g.pattern-spin{animation-play-state:paused}
+.quality-line{font-size:11px;color:var(--muted);padding:0 18px 12px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.quality-line strong{color:#cae9da;font-weight:500}
+.receipt-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.receipt-tools .small{max-width:550px}
+.nowrap{white-space:nowrap}
+body.immersive .pattern-strip,body.immersive .quality-line{display:none!important}
+body.immersive .orbit{max-width:520px;max-height:520px}
+@media(max-width:650px){.pattern-strip{padding:0 12px 14px}.pattern-strip .caption{width:100%}.receipt-tools .action{width:100%}}
+@media(prefers-reduced-motion:reduce){.stage.moving .orbit g.pattern-spin{animation:none!important}}
+/* Session status remains visible in the immersive view without audio, flash, or animation. */
+.sanctuary-timer{display:none}
+body.immersive .sanctuary-timer{display:flex;flex-direction:column;align-items:center;gap:3px;position:absolute;bottom:25px;left:50%;transform:translateX(-50%);padding:10px 25px;border:1px solid #536a72;border-radius:14px;background:#0a1622e8;color:#d5e4e2;z-index:5;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums}
+#sanctuary-time{font-size:21px}#sanctuary-status{font-size:12px}
+body.immersive .sanctuary-timer.finished{border-color:#b9d9bd;background:#1d3430;color:#e1f3e6}
+/* Keep the visual caption distinct from session status on laptop and mobile heights. */
+body.immersive .stage-message{margin-top:min(56vh,420px)}
+@media(max-width:650px){body.immersive .stage-message{margin-top:54vh}}
+.roi-note{margin-top:14px}
+.roi-error{margin-top:12px;color:#f4c9b9;font-size:13px}
+.field input[aria-invalid=true]{border-color:#efaf9f;outline-offset:2px}
+/* Dense laptop-height layout: expose the controls without heavy resizing on mobile. */
+@media(min-width:1031px) and (max-height:850px){.shell{padding-top:14px}.top{padding-bottom:12px}.hero{margin:15px 0 14px}.hero h1{font-size:clamp(29px,4vw,45px);margin:6px 0}.stage{height:285px}.stage-message{margin-top:192px}.orbit{height:240px;width:240px}.stage-tools{padding:10px 15px}.pattern-strip{padding:0 15px 10px}.quality-line{padding:0 15px 9px}.sidebox{padding:12px 15px}.side{gap:8px}.sidebox .rule{margin:9px 0}.sidebox p{margin-bottom:8px}.intention{margin:7px 0 4px;font-size:21px}.nav{margin-top:12px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="shell">
+<header class="top">
+  <div class="logo"><div class="glyph" aria-hidden="true">✦</div><div><div class="brand">RADIANCE</div><div class="subbrand">QUIET VISUAL WORKSPACE</div></div></div>
+  <div class="top-right"><span class="pill">LOCAL-FIRST · NO TRACKING</span><time class="time" id="clock" aria-label="Local time">--:--</time></div>
+</header>
+<main id="main">
+<div class="hero"><div><div class="eyebrow">AN INTERACTIVE MOMENT OF CLARITY</div><h1>A calmer place to focus.</h1><p>Explore quiet geometry, set a short timer, and choose what matters next.</p></div><div class="quiet">Independent visual experience<br>Not a medical or therapeutic device</div></div>
+<div class="layout">
+  <section class="panel">
+    <div class="stage" id="stage" role="group" aria-label="Static luminous geometry, with optional very slow motion">
+      <div class="gridline" aria-hidden="true"></div>
+      <div class="stage-info">VISUAL STUDIO</div>
+      <button class="ghost fullscreen-control" id="immersive" type="button" aria-pressed="false">Enter sanctuary <span aria-hidden="true">↗</span></button>
+      <svg class="orbit" viewBox="0 0 320 320" role="img" aria-label="Selectable static geometric light pattern" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="glow"><stop offset="0" stop-color="#ece4c8" stop-opacity=".85"/><stop offset=".25" stop-color="#ddca99" stop-opacity=".36"/><stop offset="1" stop-color="#ddca99" stop-opacity="0"/></radialGradient></defs>
+        <circle cx="160" cy="160" r="142" class="outer" stroke-dasharray="3 10"/>
+        <circle cx="160" cy="160" r="125" class="outer"/>
+        <g class="pattern-spin">
+          <g id="pattern-halo" class="pattern-group active" aria-hidden="true">
+            <ellipse cx="160" cy="160" rx="56" ry="127"/>
+            <ellipse cx="160" cy="160" rx="56" ry="127" transform="rotate(45 160 160)"/>
+            <ellipse cx="160" cy="160" rx="56" ry="127" transform="rotate(90 160 160)"/>
+            <ellipse cx="160" cy="160" rx="56" ry="127" transform="rotate(135 160 160)"/>
+            <circle cx="160" cy="160" r="92" class="secondary-stroke"/>
+          </g>
+          <g id="pattern-bloom" class="pattern-group" aria-hidden="true">
+            <circle cx="31.00" cy="85.52" r="43"/>
+            <circle cx="31.00" cy="160.00" r="43"/>
+            <circle cx="31.00" cy="234.48" r="43"/>
+            <circle cx="95.50" cy="48.28" r="43"/>
+            <circle cx="95.50" cy="122.76" r="43"/>
+            <circle cx="95.50" cy="197.24" r="43"/>
+            <circle cx="95.50" cy="271.72" r="43"/>
+            <circle cx="160.00" cy="11.04" r="43"/>
+            <circle cx="160.00" cy="85.52" r="43"/>
+            <circle cx="160.00" cy="160.00" r="43"/>
+            <circle cx="160.00" cy="234.48" r="43"/>
+            <circle cx="160.00" cy="308.96" r="43"/>
+            <circle cx="224.50" cy="48.28" r="43"/>
+            <circle cx="224.50" cy="122.76" r="43"/>
+            <circle cx="224.50" cy="197.24" r="43"/>
+            <circle cx="224.50" cy="271.72" r="43"/>
+            <circle cx="289.00" cy="85.52" r="43"/>
+            <circle cx="289.00" cy="160.00" r="43"/>
+            <circle cx="289.00" cy="234.48" r="43"/>
+          </g>
+          <g id="pattern-spiral" class="pattern-group" aria-hidden="true">
+            <path d="M159.86,160.00 L159.85,159.99 L159.85,159.98 L159.85,159.96 L159.85,159.95 L159.85,159.94 L159.85,159.92 L159.85,159.91 L159.86,159.90 L159.86,159.88 L159.87,159.87 L159.88,159.86 L159.89,159.84 L159.90,159.83 L159.91,159.82 L159.92,159.81 L159.94,159.80 L159.95,159.79 L159.97,159.78 L159.98,159.77 L160.00,159.77 L160.02,159.76 L160.04,159.76 L160.06,159.76 L160.08,159.75 L160.10,159.76 L160.12,159.76 L160.15,159.76 L160.17,159.77 L160.19,159.78 L160.21,159.79 L160.23,159.80 L160.26,159.82 L160.28,159.83 L160.29,159.85 L160.31,159.87 L160.33,159.90 L160.34,159.92 L160.36,159.95 L160.37,159.97 L160.38,160.00 L160.39,160.04 L160.39,160.07 L160.40,160.10 L160.40,160.13 L160.39,160.17 L160.39,160.20 L160.38,160.24 L160.37,160.28 L160.36,160.31 L160.34,160.35 L160.32,160.38 L160.29,160.42 L160.27,160.45 L160.23,160.48 L160.20,160.51 L160.16,160.53 L160.12,160.56 L160.08,160.58 L160.04,160.60 L159.99,160.62 L159.94,160.63 L159.89,160.64 L159.83,160.64 L159.78,160.64 L159.72,160.64 L159.66,160.63 L159.61,160.61 L159.55,160.60 L159.49,160.57 L159.43,160.54 L159.38,160.51 L159.32,160.47 L159.27,160.43 L159.22,160.38 L159.18,160.32 L159.13,160.26 L159.09,160.20 L159.06,160.13 L159.03,160.05 L159.00,159.98 L158.98,159.90 L158.97,159.81 L158.96,159.72 L158.96,159.64 L158.97,159.54 L158.98,159.45 L159.01,159.36 L159.04,159.26 L159.08,159.17 L159.12,159.08 L159.18,158.99 L159.24,158.90 L159.32,158.82 L159.40,158.74 L159.49,158.66 L159.58,158.59 L159.69,158.53 L159.80,158.47 L159.92,158.42 L160.05,158.38 L160.18,158.35 L160.31,158.33 L160.46,158.32 L160.60,158.32 L160.75,158.33 L160.90,158.36 L161.05,158.40 L161.20,158.45 L161.35,158.51 L161.50,158.59 L161.65,158.68 L161.79,158.78 L161.93,158.90 L162.05,159.03 L162.18,159.18 L162.29,159.34 L162.39,159.51 L162.48,159.69 L162.56,159.88 L162.62,160.09 L162.67,160.30 L162.70,160.52 L162.72,160.75 L162.72,160.99 L162.69,161.23 L162.65,161.47 L162.59,161.72 L162.51,161.96 L162.40,162.21 L162.27,162.45 L162.13,162.68 L161.95,162.91 L161.76,163.13 L161.55,163.34 L161.31,163.53 L161.05,163.72 L160.77,163.88 L160.48,164.02 L160.16,164.15 L159.83,164.25 L159.49,164.33 L159.13,164.38 L158.75,164.40 L158.37,164.39 L157.98,164.35 L157.59,164.28 L157.19,164.18 L156.80,164.04 L156.40,163.87 L156.01,163.66 L155.63,163.42 L155.26,163.14 L154.91,162.83 L154.57,162.47 L154.26,162.09 L153.97,161.67 L153.71,161.22 L153.47,160.74 L153.28,160.23 L153.11,159.69 L152.99,159.13 L152.91,158.54 L152.88,157.94 L152.90,157.32 L152.96,156.69 L153.08,156.05 L153.25,155.41 L153.47,154.77 L153.76,154.13 L154.10,153.50 L154.50,152.89 L154.95,152.30 L155.47,151.72 L156.04,151.18 L156.67,150.68 L157.35,150.21 L158.08,149.79 L158.86,149.41 L159.69,149.10 L160.57,148.84 L161.48,148.65 L162.42,148.53 L163.40,148.48 L164.40,148.51 L165.42,148.62 L166.46,148.82 L167.50,149.10 L168.54,149.47 L169.57,149.94 L170.58,150.49 L171.57,151.15 L172.53,151.89 L173.45,152.73 L174.33,153.66 L175.14,154.68 L175.89,155.79 L176.57,156.98 L177.17,158.25 L177.67,159.60 L178.08,161.02 L178.38,162.50 L178.57,164.04 L178.64,165.62 L178.58,167.24 L178.40,168.90 L178.07,170.57 L177.60,172.25 L176.99,173.93 L176.22,175.60 L175.31,177.24 L174.25,178.84 L173.03,180.39 L171.66,181.87 L170.15,183.28 L168.48,184.59 L166.68,185.80 L164.74,186.89 L162.67,187.84 L160.48,188.65 L158.18,189.30 L155.78,189.77 L153.29,190.06 L150.72,190.16 L148.09,190.06 L145.41,189.73 L142.71,189.19 L139.98,188.42 L137.27,187.40 L134.57,186.15 L131.92,184.66 L129.34,182.92 L126.84,180.93 L124.44,178.70 L122.18,176.23 L120.06,173.52 L118.12,170.59 L116.38,167.44 L114.85,164.08 L113.56,160.52 L112.53,156.79 L111.78,152.89 L111.33,148.85 L111.20,144.69 L111.39,140.43 L111.94,136.09 L112.85,131.70 L114.13,127.30 L115.79,122.90 L117.84,118.55 L120.29,114.27 L123.13,110.09 L126.38,106.06 L130.01,102.20 L134.04,98.55 L138.44,95.15 L143.22,92.03 L148.34,89.23 L153.80,86.79 L159.58,84.73 L165.64,83.10 L171.96,81.92 L178.51,81.22 L185.26,81.04 L192.17,81.40 L199.19,82.32 L206.29,83.83 L213.42,85.95 L220.53,88.68 L227.57,92.05 L234.49,96.05 L241.23,100.70 L247.74,106.00 L253.96,111.92 L259.84,118.48 L265.31,125.65 L270.32,133.42 L274.81,141.75 L278.72,150.62 L282.00,160.00"/>
+            <circle cx="160" cy="160" r="110" class="secondary-stroke" stroke-dasharray="2 11"/>
+          </g>
+        </g>
+        <circle cx="160" cy="160" r="42" fill="url(#glow)"/>
+        <circle cx="160" cy="160" r="3.5" class="core"/>
+      </svg>
+      <div class="stage-message"><strong id="stage-title">Take a moment.</strong><span id="stage-sub">Begin with a clear pause.</span></div>
+      <div class="sanctuary-timer" id="sanctuary-timer"><span id="sanctuary-time" aria-label="Time remaining">12:00</span><span id="sanctuary-status" role="status" aria-live="polite">Ready to begin</span></div>
+    </div>
+    <div class="stage-tools"><div class="button-group"><button class="action secondary" id="motion" aria-pressed="false" type="button">Enable slow motion</button><button class="action secondary" id="dim" type="button" aria-pressed="false">Dim ambience</button></div><div class="select-wrap"><label for="duration">Session</label><select id="duration"><option value="5">5 minutes</option><option value="12" selected>12 minutes</option><option value="25">25 minutes</option></select></div></div>
+    <div class="pattern-strip"><span class="caption" id="pattern-description">HALO · Symmetry of overlapping ellipses</span><div class="pattern-buttons" role="group" aria-label="Choose luminous geometry"><button class="pattern-button" type="button" data-pattern="halo" aria-pressed="true">Halo</button><button class="pattern-button" type="button" data-pattern="bloom" aria-pressed="false">Bloom</button><button class="pattern-button" type="button" data-pattern="spiral" aria-pressed="false">φ Spiral</button></div></div>
+    <div class="quality-line"><strong id="economy-label">ECO · Stillness</strong><span id="economy-detail">Static visuals, no downloads, no audio, no background tasks</span></div>
+  </section>
+  <aside class="side">
+    <section class="panel sidebox"><div class="eyebrow">Choose your intention</div><div class="modes" role="group" aria-label="Intention themes"><button class="modepick" type="button" data-theme="presence" aria-pressed="true">Presence</button><button class="modepick" type="button" data-theme="gratitude" aria-pressed="false">Gratitude</button><button class="modepick" type="button" data-theme="clarity" aria-pressed="false">Clarity</button><button class="modepick" type="button" data-theme="creation" aria-pressed="false">Creation</button><button class="modepick" type="button" data-theme="rest" aria-pressed="false">Rest</button></div><div class="intention" id="intention">Take a moment.</div><div class="small" id="intention-detail">Begin with a clear pause.</div><div class="rule"></div><div class="offline"><span class="dot"></span>Silent and static by default · no flashing</div></section>
+    <section class="panel sidebox"><div class="eyebrow">Intentional session</div><div class="timerrow"><div class="timer" id="session-time" role="timer" aria-label="Minutes remaining">12:00</div><div class="small" id="session-status" aria-live="polite">Ready to begin</div></div><div class="session-buttons"><button class="action" id="session-toggle" type="button">Begin session</button><button class="action secondary" id="session-reset" type="button">Reset</button></div><div class="rule"></div><p>The timer supports focus or rest; no task completion is required.</p><div class="tiny">The session uses elapsed clock time and may reach zero while the computer sleeps. A sleeping computer does not provide alerts.</div></section>
+  </aside>
+</div>
+<nav class="nav" role="tablist" aria-label="Control center modes"><button type="button" id="tab-presence" data-tab="presence" role="tab" aria-controls="panel-presence" aria-selected="true">Presence</button><button type="button" id="tab-focus" data-tab="focus" role="tab" aria-controls="panel-focus" aria-selected="false">Focus</button><button type="button" id="tab-return" data-tab="return" role="tab" aria-controls="panel-return" aria-selected="false">Return / ROI</button><button type="button" id="tab-about" data-tab="about" role="tab" aria-controls="panel-about" aria-selected="false">How it works</button></nav>
+<div id="panel-presence" class="content" role="tabpanel" aria-labelledby="tab-presence">
+  <section class="panel detailbox"><div class="eyebrow">The focus loop</div><h2>From a pause to a clear next step</h2><div class="steps"><div class="step"><b>01 · PAUSE</b><strong>Notice where you are</strong><small>An intentional state rather than another notification.</small></div><div class="step"><b>02 · CHOOSE</b><strong>Select one useful action</strong><small>Something useful, kind, or measurable.</small></div><div class="step"><b>03 · REVIEW</b><strong>Review the result</strong><small>An outcome, lesson or next step.</small></div></div></section>
+  <section class="panel detailbox"><div class="eyebrow">An open invitation</div><div class="intent-quote">“A quiet moment can make room for a clearer next step.”</div><p>Use the visuals for reflection or a short focus session. Rest is also a valid choice.</p><button class="action secondary" type="button" id="start-focus">Move into focus →</button></section>
+</div>
+<div id="panel-focus" class="content" role="tabpanel" aria-labelledby="tab-focus" hidden>
+  <section class="panel detailbox"><div class="eyebrow">One useful action</div><h2>Choose a manageable next action.</h2><p>Notes are temporary and are not transmitted. An explicit export creates a local text file; avoid entering sensitive information on shared devices.</p><div class="focusline"><div class="field"><label for="focus-task">Next action</label><input id="focus-task" autocomplete="off" maxlength="140" placeholder="Example: Review a checklist"></div><button class="action" type="button" id="complete-task">Mark complete</button></div><div id="focus-receipt" class="receipt" aria-live="polite">No completed action recorded in this session yet.</div><div class="receipt-tools"><button id="export-receipt" class="action secondary" type="button" disabled>Export my session record</button><span class="small" id="export-note">No data is saved automatically. Export is optional, local, and includes any tasks entered.</span></div></section>
+  <section class="panel detailbox"><div class="eyebrow">Simple by design</div><h2>One page. One task.</h2><p>The interface runs without an account, backend service, or network dependency. It does not perform background tasks or connect to external services.</p><div class="small">Completed actions shown here are self-reported, not independently verified.</div></section>
+</div>
+<div id="panel-return" class="content" role="tabpanel" aria-labelledby="tab-return" hidden>
+  <section class="panel detailbox"><div class="eyebrow">Energy-to-value instrument</div><h2>Estimate the cost of screen time</h2><p>Enter measured wall power and documented savings when available. Until then, these are assumptions, not earnings.</p><div class="formgrid">
+    <div class="field"><label for="watts">Average power (W)</label><input type="number" id="watts" min="0" max="1000" step="1" value="15"></div>
+    <div class="field"><label for="hours">Hours/day</label><input type="number" id="hours" min="0" max="24" step="0.5" value="4"></div>
+    <div class="field"><label for="rate">Electricity ($/kWh)</label><input type="number" id="rate" min="0" max="5" step="0.01" value="0.25"></div>
+    <div class="field"><label for="minutes">Minutes actually saved/day</label><input type="number" id="minutes" min="0" max="1440" step="1" value="0"></div>
+    <div class="field"><label for="hourly">Value of time ($/hr)</label><input type="number" id="hourly" min="0" max="10000" step="1" value="0"></div>
+    <div class="field"><label for="cash">Actual cash earned/month ($)</label><input type="number" id="cash" min="0" max="10000000" step="1" value="0"></div>
+    <div class="field"><label for="other">Other monthly cost ($)</label><input type="number" id="other" min="0" max="100000" step="1" value="0"></div>
+  </div><p class="roi-error" id="roi-error" role="alert" hidden></p><div class="metricrow"><div class="metric"><span>Electricity / 30 days</span><strong id="electricity">$0.45</strong></div><div class="metric"><span>Modeled time value</span><strong id="timevalue">$0.00</strong></div><div class="metric"><span>Modeled net value</span><strong id="netvalue" class="negative">−$0.45</strong></div></div></section>
+  <section class="panel detailbox"><div class="eyebrow">Operating decision</div><h2 id="roi-headline">Estimate energy costs and possible benefits.</h2><p id="roi-explain">Estimates begin at zero time savings and zero cash return until you enter evidence-backed values.</p><div class="rule"></div><span class="small">Minimum time saved per day to offset entered costs</span><div class="value" id="breakeven">N/A</div><div class="rule"></div><div class="small" id="cashnet">Cash-only balance: −$0.45/month</div><p class="tiny roi-note">Time value is an economic estimate—not income. Maintenance, hardware wear, connectivity, security, and opportunity costs may not be included. A device can sleep when no use is required.</p></section>
+</div>
+<div id="panel-about" class="content" role="tabpanel" aria-labelledby="tab-about" hidden>
+  <section class="panel detailbox"><div class="eyebrow">About the experience</div><h2>A quiet visual workspace.</h2><p>Radiance presents original geometric visuals with optional slow movement, a session timer, a single-action focus panel, and a transparent cost calculator.</p><p>This is an ambient visual and productivity interface, not a medical treatment or a substitute for professional care. It does not measure health effects or provide therapeutic claims.</p></section>
+  <section class="panel detailbox"><div class="eyebrow">Lightweight by design</div><h2>Static first. Offline by design.</h2><p>No frameworks, videos, WebGL, external fonts, libraries, tracking, analytics, network requests, credentials or persistent browser storage. Motion is off by default, has one deliberately slow transform, and respects reduced-motion preferences.</p><p class="small">This static page works offline or over HTTPS. It has no accounts or synchronization.</p><div class="offline"><span class="dot"></span>No network requests or analytics</div></section>
+</div>
+</main>
+<footer class="footer"><span>Radiance · v0.5.3 · Quiet Visual Workspace</span><span>Offline capable · Silent by default · No sign-in</span></footer>
+</div>
+<script>
+(function(){'use strict';
+  var $=function(id){return document.getElementById(id);};
+  var themes={presence:{title:'Take a moment.',prompt:'Begin with presence.',sub:'Begin with a clear pause.',a:'#ebc985',b:'#8be1d0'},gratitude:{title:'Notice what matters.',prompt:'Appreciate something good.',sub:'Appreciate something useful or good.',a:'#f0cf94',b:'#b5dca9'},clarity:{title:'Find a clear next step.',prompt:'Name one priority.',sub:'Give one priority your attention.',a:'#a9e3dc',b:'#d2bfed'},creation:{title:'Make progress.',prompt:'Start something manageable.',sub:'Start with one manageable action.',a:'#f4ca8c',b:'#92c9e9'},rest:{title:'Make room to rest.',prompt:'Make space for quiet.',sub:'Take a quiet interval.',a:'#b8d2f0',b:'#e9c7b6'}};
+  var sessionSeconds=12*60,sessionRunning=false,sessionDeadline=0,sessionTimer=null,sessionFinished=false,doneCount=0,hasMotion=false,dimmed=false,currentTheme='presence',currentPattern='halo',isImmersive=false,receipts=[];
+  var reduceMotion=window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function desiredMotion(){return hasMotion&&!(reduceMotion&&reduceMotion.matches);}
+  function updateMotion(){var playing=desiredMotion()&&!document.hidden; $('stage').classList.toggle('moving',playing); $('stage').classList.toggle('suspended',document.hidden);$('motion').textContent=hasMotion?'Disable slow motion':'Enable slow motion';$('motion').setAttribute('aria-pressed',hasMotion?'true':'false');$('economy-label').textContent=playing?'ECO · Slow motion':'ECO · Stillness';$('economy-detail').textContent=playing?'One 200-second rotation; pauses when tab is hidden':'Static visuals, no downloads, no audio, no background tasks'; }
+  function pattern(name){if(['halo','bloom','spiral'].indexOf(name)<0)return;currentPattern=name;var names=['halo','bloom','spiral'],labels={halo:'HALO · Symmetry of overlapping ellipses',bloom:'BLOOM · 19-circle hexagonal geometry',spiral:'φ SPIRAL · Logarithmic golden-ratio growth'};for(var i=0;i<names.length;i++){var selected=names[i]===name;var el=$('pattern-'+names[i]);el.classList.toggle('active',selected);el.setAttribute('aria-hidden',selected?'false':'true');}var controls=document.querySelectorAll('[data-pattern]');for(var j=0;j<controls.length;j++)controls[j].setAttribute('aria-pressed',controls[j].getAttribute('data-pattern')===name?'true':'false');$('pattern-description').textContent=labels[name];}
+  function theme(name){if(!themes[name])return;currentTheme=name;var o=themes[name];$('stage-title').textContent=o.title;$('stage-sub').textContent=o.sub;$('intention').textContent=o.prompt;$('intention-detail').textContent=o.sub;document.documentElement.style.setProperty('--accent',o.a);document.documentElement.style.setProperty('--accent2',o.b);var picks=document.querySelectorAll('[data-theme]');for(var i=0;i<picks.length;i++)picks[i].setAttribute('aria-pressed',picks[i].getAttribute('data-theme')===name?'true':'false');}
+  function tab(name){var names=['presence','focus','return','about'];if(names.indexOf(name)<0)return;for(var i=0;i<names.length;i++){var n=names[i],sel=(n===name);$('panel-'+n).hidden=!sel;$('tab-'+n).setAttribute('aria-selected',sel?'true':'false');$('tab-'+n).tabIndex=sel?0:-1;}if(isImmersive)immersive(false);}
+  function immersive(on){isImmersive=!!on;document.body.classList.toggle('immersive',isImmersive);$('immersive').textContent=isImmersive?'Exit sanctuary ×':'Enter sanctuary ↗';$('immersive').setAttribute('aria-pressed',isImmersive?'true':'false');}
+  function remaining(){return sessionRunning?Math.max(0,Math.ceil((sessionDeadline-Date.now())/1000)):sessionSeconds;}
+  function renderTime(){var n=remaining();sessionSeconds=n;var m=Math.floor(n/60),s=n%60;$('session-time').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;$('session-toggle').textContent=sessionRunning?'Pause session':(sessionFinished?'Begin again':'Begin session');if(n===0&&sessionRunning){sessionRunning=false;sessionFinished=true;clearInterval(sessionTimer);sessionTimer=null;$('session-status').textContent='Session complete';$('session-toggle').textContent='Begin again';} $('sanctuary-time').textContent=$('session-time').textContent;var status=$('session-status').textContent;if($('sanctuary-status').textContent!==status)$('sanctuary-status').textContent=status;$('sanctuary-timer').classList.toggle('finished',sessionFinished);}
+  function stopTicker(){if(sessionTimer!==null){clearInterval(sessionTimer);sessionTimer=null;}}
+  function resetSession(){sessionRunning=false;sessionFinished=false;stopTicker();sessionSeconds=Number($('duration').value)*60;$('session-status').textContent='Ready to begin';renderTime();}
+  function toggleSession(){if(sessionRunning){sessionSeconds=remaining();sessionRunning=false;stopTicker();$('session-status').textContent='Paused';}else{if(sessionSeconds===0)sessionSeconds=Number($('duration').value)*60;sessionFinished=false;sessionRunning=true;sessionDeadline=Date.now()+sessionSeconds*1000;$('session-status').textContent='In progress';sessionTimer=setInterval(renderTime,1000);}renderTime();}
+  function finite(id,max){var el=$(id),n=Number(el.value),ok=el.value.trim()!==''&&isFinite(n)&&n>=0&&n<=max&&el.validity.valid;el.setAttribute('aria-invalid',ok?'false':'true');return ok?n:null;}
+  function money(n){return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function evaluate(p){var kwh=p.watts*p.hours*30/1000,power=kwh*p.rate,time=p.minutes*30*p.hourly/60,expense=power+p.other,cashBalance=p.cash-expense,net=p.cash+time-expense;return{kilowattHours:kwh,powerCost:power,modelledTimeValue:time,expenses:expense,cashBalance:cashBalance,modeledNet:net,breakEvenMinutes:p.hourly>0?Math.max(0,(expense-p.cash)*60/(30*p.hourly)):null};}
+  function signmoney(n){return(n>=0?'+':'−')+money(Math.abs(n));}
+  function calculate(){var p={watts:finite('watts',1000),hours:finite('hours',24),rate:finite('rate',5),minutes:finite('minutes',1440),hourly:finite('hourly',10000),cash:finite('cash',10000000),other:finite('other',100000)};var bad=Object.keys(p).filter(function(id){return p[id]===null;});if(bad.length){var labels=bad.map(function(id){var el=$(id);return document.querySelector('label[for="'+id+'"]').textContent+' (range '+el.min+'–'+el.max+', step '+el.step+')';});var message='Check the highlighted input'+(bad.length>1?'s':'')+': '+labels.join('; ')+'.';$('roi-error').hidden=false;if($('roi-error').textContent!==message)$('roi-error').textContent=message;$('electricity').textContent='—';$('timevalue').textContent='—';$('netvalue').textContent='—';$('netvalue').className='';$('cashnet').textContent='Cash-only balance: unavailable';$('breakeven').textContent='N/A';$('roi-headline').textContent='Correct the inputs to calculate.';$('roi-explain').textContent='No estimate is shown while an input is invalid.';return null;} $('roi-error').hidden=true;if($('roi-error').textContent!=='')$('roi-error').textContent='';var r=evaluate(p);$('electricity').textContent=money(r.powerCost);$('timevalue').textContent=money(r.modelledTimeValue);$('netvalue').textContent=signmoney(r.modeledNet);$('netvalue').className=r.modeledNet>=0?'positive':'negative';$('cashnet').textContent='Cash-only balance: '+signmoney(r.cashBalance)+'/month';$('breakeven').textContent=r.breakEvenMinutes===null?'N/A':r.breakEvenMinutes.toFixed(2)+' min';$('roi-headline').textContent=r.modeledNet>=0?'Modeled value exceeds entered costs.':'Costs exceed modeled value.';$('roi-explain').textContent=r.modeledNet>=0?'Estimates combine entered income and assigned time value; no earnings are independently verified.':'This scenario has no modeled return above its costs. Consider reducing operating hours or allowing the device to sleep.';return r;}
+  function complete(){var task=$('focus-task').value.trim();if(!task){$('focus-receipt').textContent='Enter one action before marking it complete.';return;}doneCount++;var date=new Date();receipts.push({at:date.toISOString(),intention:currentTheme,geometry:currentPattern,task:task});$('focus-receipt').textContent='Completed action '+doneCount+' (self-reported): '+task;$('focus-task').value='';$('export-receipt').disabled=false;}
+  function exportReceipt(){if(!receipts.length)return;var rows=['Radiance v0.5.3 | Optional session export','Self-reported actions only. No independent completion or earnings verification.',''];for(var i=0;i<receipts.length;i++){var r=receipts[i];rows.push((i+1)+'. '+r.at+' | '+r.intention+' | '+r.geometry+' | '+r.task);}var blob=new Blob([rows.join('\r\n')+'\r\n'],{type:'text/plain;charset=utf-8'});var file='Radiance_Session_'+new Date().toISOString().slice(0,10)+'.txt';if(window.navigator.msSaveBlob){window.navigator.msSaveBlob(blob,file);return;}var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=file;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url);},2000);$('export-note').textContent='Session export requested. Review the downloaded text; it contains entered task notes.';}
+  var picks=document.querySelectorAll('[data-theme]');for(var i=0;i<picks.length;i++)picks[i].addEventListener('click',function(){theme(this.getAttribute('data-theme'));});
+  var patternButtons=document.querySelectorAll('[data-pattern]');for(var p=0;p<patternButtons.length;p++)patternButtons[p].addEventListener('click',function(){pattern(this.getAttribute('data-pattern'));});
+  var tabs=document.querySelectorAll('[data-tab]');for(var j=0;j<tabs.length;j++){
+    tabs[j].addEventListener('click',function(){tab(this.getAttribute('data-tab'));});
+    tabs[j].addEventListener('keydown',function(e){var keys=['ArrowLeft','ArrowRight','Home','End'];if(keys.indexOf(e.key)<0)return;e.preventDefault();var names=['presence','focus','return','about'],index=names.indexOf(this.getAttribute('data-tab'));var next=e.key==='Home'?0:e.key==='End'?names.length-1:(index+(e.key==='ArrowRight'?1:-1)+names.length)%names.length;tab(names[next]);$('tab-'+names[next]).focus();});
+  }
+  $('motion').addEventListener('click',function(){hasMotion=!hasMotion;updateMotion();});
+  $('dim').addEventListener('click',function(){dimmed=!dimmed;$('stage').style.filter=dimmed?'brightness(.67)':'';this.setAttribute('aria-pressed',dimmed?'true':'false');this.textContent=dimmed?'Restore ambience':'Dim ambience';});
+  $('immersive').addEventListener('click',function(){immersive(!isImmersive);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&isImmersive)immersive(false);});
+  $('duration').addEventListener('change',resetSession);$('session-toggle').addEventListener('click',toggleSession);$('session-reset').addEventListener('click',resetSession);
+  $('start-focus').addEventListener('click',function(){tab('focus');$('focus-task').focus();});$('complete-task').addEventListener('click',complete);$('export-receipt').addEventListener('click',exportReceipt);
+  var inputs=document.querySelectorAll('#panel-return input');for(var k=0;k<inputs.length;k++)inputs[k].addEventListener('input',calculate);
+  document.addEventListener('visibilitychange',function(){updateMotion();renderTime();});
+  if(reduceMotion){if(reduceMotion.addEventListener)reduceMotion.addEventListener('change',updateMotion);else if(reduceMotion.addListener)reduceMotion.addListener(updateMotion);}
+  function clock(){var d=new Date();$('clock').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});}
+  window.RadianceEngine={evaluate:evaluate};
+  theme('presence');pattern('halo');tab('presence');resetSession();calculate();clock();setInterval(clock,30000);
+})();
+</script>
+</body>
+</html>
