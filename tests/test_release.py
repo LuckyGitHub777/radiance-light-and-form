@@ -43,6 +43,19 @@ class ReleaseTest(unittest.TestCase):
                     continue
                 self.assertTrue((path.parent/link).is_file(),f'{path.name}: {link}')
 
+    def test_inline_csp_hashes(self):
+        html=(ROOT/'index.html').read_text(encoding='utf-8')
+        meta=re.search(r'<meta http-equiv="Content-Security-Policy"[^>]*>',html)
+        self.assertIsNotNone(meta,'Missing browser CSP')
+        headers=(ROOT/'_headers').read_text(encoding='utf-8')
+        for element,directive in (('style','style-src'),('script','script-src')):
+            blocks=re.findall(fr'<{element}>(.*?)</{element}>',html,re.S)
+            self.assertEqual(len(blocks),1,f'Exactly one inline {element} expected')
+            digest=base64.b64encode(hashlib.sha256(blocks[0].encode('utf-8')).digest()).decode('ascii')
+            policy=f"{directive} 'sha256-{digest}'"
+            self.assertIn(policy,meta.group(0),f'Browser CSP stale for {element}')
+            self.assertIn(policy,headers,f'Host CSP stale for {element}')
+
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
             with self.subTest(path=path.name):
