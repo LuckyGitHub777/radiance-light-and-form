@@ -1,6 +1,8 @@
 # Radiance — Light and Form
 
-An offline interactive artwork with three geometric forms—Halo, Bloom and Spiral—and optional slow movement. Explore colors and patterns, or use its local focus timer and estimate calculator.
+**Explore online:** [Open the public interactive website](https://luckygithub777.github.io/radiance-light-and-form/). Open the hosted browser experience first; the repository retains source code and optional local usage.
+
+An interactive web artwork with three geometric forms—Halo, Bloom and Spiral—and optional slow movement. Explore colors and patterns, or use its local focus timer and estimate calculator.
 
 Open [index.html](index.html) in a modern browser. Everything is bundled into that file; there is no account, remote service, telemetry, or build step. The optional text export stays on your device. `_headers` provides a recommended security policy for compatible static hosts; browser-level and host-level protection are different and must be checked separately.
 
