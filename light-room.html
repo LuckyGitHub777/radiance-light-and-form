@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="description" content="Radiance Light Room: original ambient luminous geometry for a quiet, private, offline visual experience.">
 <title>Radiance — Light Room</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-iNB1rHDkTssfRa2IqoAGqkqge4rztAc4OpXInPbBavA='; script-src 'sha256-5dtbcjbVRmUZWBgCg86lV8324MZ3LxEW/3ni9J8hE3I='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-WJzgb9pRQ6XuCOgl0mDXnKAIrlPU7DygJITYiMFUZ9c='; script-src 'sha256-P22HdlVIF5X3Q8bb7EsVa27kMftsDE57d7GUdlhfefc='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <style>
 :root{--hue-a:#f2cd91;--hue-b:#84d6d2;--hue-c:#d5a76b;--vignette:#070b13;--text:#f4f0e8;--muted:#b6c2cb}
 *{box-sizing:border-box}
@@ -152,6 +152,11 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 @keyframes wing-drift-right{from{transform:scaleX(-1) translateY(-18px)}to{transform:scaleX(-1) translateY(18px)}}
 @media(max-width:650px){.ambient-curtain{display:none!important}.room.quiet-mode .art{width:100vw;height:min(99vh,760px)}}
 @media(prefers-reduced-motion:reduce){.room.moving .ambient-curtain{animation:none!important}}
+
+/* Living field: original continuous multiscale SVG waves, no external resources. */
+.living-field{pointer-events:none;opacity:.83}
+.room.power-soft .living-field{opacity:.46}
+.room.power-radiant .living-field{opacity:.96}
 </style>
 </head>
 <body>
@@ -178,6 +183,8 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <clipPath id="face-left"><path d="M360 74 L145 364 L362 423 Z"/></clipPath>
           <clipPath id="face-right"><path d="M360 74 L362 423 L575 364 Z"/></clipPath>
           <clipPath id="prism-area"><path d="M360 74 L166 387 L360 450 L554 387 Z"/></clipPath>
+          <clipPath id="halo-field-area"><circle cx="360" cy="270" r="193"/></clipPath>
+          <clipPath id="bloom-field-area"><circle cx="360" cy="270" r="214"/></clipPath>
         </defs>
         <circle cx="360" cy="268" r="246" fill="url(#mist)" />
         <g class="slow-ring" aria-hidden="true">
@@ -186,6 +193,8 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <circle class="ring" cx="360" cy="268" r="229" stroke-dasharray="1 24"/>
         </g>
         <g class="scene active" id="scene-pyramid">
+          <g class="living-field" id="field-pyramid-left" clip-path="url(#face-left)" aria-hidden="true"></g>
+          <g class="living-field" id="field-pyramid-right" clip-path="url(#face-right)" aria-hidden="true"></g>
           <g class="light-stream stream-left" clip-path="url(#face-left)" aria-hidden="true">
           <g class="stream-tracks">
           <line class="stripe-a" x1="125" y1="-168" x2="595" y2="-168" stroke-width="2.4" opacity="0.63"/>
@@ -353,6 +362,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <circle cx="360" cy="74" r="28" fill="url(#mistsmall)"/>
         </g>
         <g class="scene" id="scene-halo">
+          <g class="living-field" id="field-halo" clip-path="url(#halo-field-area)" aria-hidden="true"></g>
           <g class="halo-flow" aria-hidden="true">
             <ellipse cx="360" cy="270" rx="183" ry="48" class="outline secondary"/>
             <ellipse cx="360" cy="270" rx="48" ry="183" class="outline"/>
@@ -369,6 +379,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <circle class="beacon" cx="360" cy="270" r="6"/>
         </g>
         <g class="scene" id="scene-bloom">
+          <g class="living-field" id="field-bloom" clip-path="url(#bloom-field-area)" aria-hidden="true"></g>
           <g class="bloom-flow" aria-hidden="true">
             <circle class="outline secondary" cx="360" cy="270" r="70"/>
             <circle class="outline" cx="360" cy="159" r="70"/>
@@ -387,6 +398,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <circle class="beacon" cx="360" cy="270" r="5"/>
         </g>
         <g class="scene" id="scene-prism">
+          <g class="living-field" id="field-prism" clip-path="url(#prism-area)" aria-hidden="true"></g>
           <g class="light-stream stream-prism" clip-path="url(#prism-area)" aria-hidden="true">
           <g class="stream-tracks">
           <line class="stripe-a" x1="126" y1="-168" x2="596" y2="-168" stroke-width="2.4" opacity="0.63"/>
@@ -493,11 +505,80 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
   var colorSets={aurum:['#f2cd91','#84d6d2'],aurora:['#9eeac3','#91cee5'],ocean:['#9ecbfa','#7fdfe6'],violet:['#cfb8f7','#9dcae7'],rose:['#f0b6ca','#e5c18f']};
   var scene='pyramid',color='aurum',power='balanced',motion=true,speed='flow';
   var reduce=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
+
+  /* Local procedural light. Paths evolve independently inside each geometry,
+     are throttled for low-power devices, and stop for Pause/reduced motion/hidden tabs. */
+  var fieldGroups={'pyramid':['pyramid-left','pyramid-right'],halo:['halo'],bloom:['bloom'],prism:['prism']};
+  var fieldColors={
+    aurum:['#f2cd91','#84d6d2','#aab8f7','#e9adcf','#b5e9e2'],
+    aurora:['#9eeac3','#91cee5','#b1acfa','#f0bfd6','#e0f9ce'],
+    ocean:['#9ecbfa','#7fdfe6','#a6aaf9','#c1eeff','#d6b7ee'],
+    violet:['#cfb8f7','#9dcae7','#edb6dc','#9cb8fa','#ead6aa'],
+    rose:['#f0b6ca','#e5c18f','#b9a5e8','#ffdbbd','#9fcedb']
+  };
+  var fieldPaths={},fieldReady=false,fieldFrame=0,fieldLast=0,fieldTime=0;
+  function initField(){
+    if(fieldReady)return;
+    var names=['pyramid-left','pyramid-right','halo','bloom','prism'];
+    for(var k=0;k<names.length;k++){
+      var root=document.getElementById('field-'+names[k]);fieldPaths[names[k]]=[];
+      if(!root)continue;
+      for(var i=0;i<52;i++){
+        var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+        p.setAttribute('fill','none');p.setAttribute('stroke-linecap','round');
+        p.setAttribute('stroke-width',String(1.15+(i%5)*0.38));
+        p.setAttribute('opacity',String(.30+(i%7)*.065));
+        root.appendChild(p);fieldPaths[names[k]].push(p);
+      }
+    }
+    fieldReady=true;
+  }
+  function drawField(){
+    if(!fieldReady)return;
+    var names=fieldGroups[scene],colors=fieldColors[color]||fieldColors.aurum;
+    for(var k=0;k<names.length;k++){
+      var paths=fieldPaths[names[k]],reverse=(names[k]==='pyramid-right'||scene==='bloom')?-1:1;
+      for(var i=0;i<paths.length;i++){
+        var offset=i*13.2+fieldTime*7.8*reverse+k*9;
+        var base=((offset%690)+690)%690-92;
+        var d='',x,y;
+        for(x=116;x<=610;x+=19){
+          y=base+9.5*Math.sin(x*.028+fieldTime*.82*reverse+i*.38)+
+            4.8*Math.sin(x*.066-fieldTime*.56+i*.22+k*1.6);
+          d+=(x===116?'M':'L')+x+' '+y.toFixed(1)+' ';
+        }
+        paths[i].setAttribute('d',d);
+        paths[i].setAttribute('stroke',colors[(i+2*k)%colors.length]);
+      }
+    }
+  }
+  function fieldTick(now){
+    fieldFrame=0;
+    var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;
+    if(!allowed)return;
+    var minMs=speed==='drift'?155:speed==='vivid'?75:105;
+    if(!fieldLast||now-fieldLast>=minMs){
+      var delta=fieldLast?Math.min((now-fieldLast)/1000,.2):.1;
+      fieldTime+=delta*(speed==='drift'?.54:speed==='vivid'?1.65:1);
+      fieldLast=now;drawField();
+    }
+    if(window.requestAnimationFrame)fieldFrame=window.requestAnimationFrame(fieldTick);
+  }
+  function syncField(allowed){
+    initField();drawField();
+    if(!allowed){
+      if(fieldFrame&&window.cancelAnimationFrame)window.cancelAnimationFrame(fieldFrame);
+      fieldFrame=0;fieldLast=0;return;
+    }
+    if(!fieldFrame&&window.requestAnimationFrame){
+      fieldLast=0;fieldFrame=window.requestAnimationFrame(fieldTick);
+    }
+  }
   function mark(name,value){var buttons=document.querySelectorAll('[data-'+name+']');for(var i=0;i<buttons.length;i++)buttons[i].setAttribute('aria-pressed',buttons[i].getAttribute('data-'+name)===value?'true':'false');}
-  function pickScene(value){if(['pyramid','halo','bloom','prism'].indexOf(value)<0)return;scene=value;var list=['pyramid','halo','bloom','prism'];for(var i=0;i<list.length;i++){var el=document.getElementById('scene-'+list[i]);el.setAttribute('class',list[i]===value?'scene active':'scene');}mark('scene',value);}
-  function pickColor(value){if(!colorSets[value])return;color=value;room.style.setProperty('--hue-a',colorSets[value][0]);room.style.setProperty('--hue-b',colorSets[value][1]);mark('color',value);}
+  function pickScene(value){if(['pyramid','halo','bloom','prism'].indexOf(value)<0)return;scene=value;var list=['pyramid','halo','bloom','prism'];for(var i=0;i<list.length;i++){var el=document.getElementById('scene-'+list[i]);el.setAttribute('class',list[i]===value?'scene active':'scene');}mark('scene',value);drawField();}
+  function pickColor(value){if(!colorSets[value])return;color=value;room.style.setProperty('--hue-a',colorSets[value][0]);room.style.setProperty('--hue-b',colorSets[value][1]);mark('color',value);drawField();}
   function pickPower(value){if(['soft','balanced','radiant'].indexOf(value)<0)return;room.classList.remove('power-soft','power-balanced','power-radiant');room.classList.add('power-'+value);power=value;mark('power',value);}
-  function updateMotion(){var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;room.classList.toggle('moving',allowed);var btn=document.getElementById('motion');btn.setAttribute('aria-pressed',motion?'true':'false');btn.textContent=allowed?'Pause light flow':motion?'Motion unavailable · still':'Start light flow';}
+  function updateMotion(){var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;room.classList.toggle('moving',allowed);var btn=document.getElementById('motion');btn.setAttribute('aria-pressed',motion?'true':'false');btn.textContent=allowed?'Pause light flow':motion?'Motion unavailable · still':'Start light flow';syncField(allowed);}
   function quiet(on){room.classList.toggle('quiet-mode',!!on);if(on)document.getElementById('restore-ui').focus();else document.getElementById('hide-ui').focus();}
   var speedButtons=document.querySelectorAll('[data-speed]');
   for(var si=0;si<speedButtons.length;si++)speedButtons[si].addEventListener('click',function(){
