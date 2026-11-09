@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Radiance Light Room: original ambient luminous geometry for a quiet, private, offline visual experience.">
+<title>Radiance — Light Room</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-/8sz1YZ19nJ60yAUJcmFH8KKTsWjS8D38dPi6SOgyeQ='; script-src 'sha256-MZRn4Ttv3O/O3HJUwyBVYjkbbbu+zgwOVlE728dFSvg='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<style>
+:root{--hue-a:#f2cd91;--hue-b:#84d6d2;--hue-c:#d5a76b;--vignette:#070b13;--text:#f4f0e8;--muted:#b6c2cb}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;background:#080d17;color:var(--text);font-family:Segoe UI,Arial,Helvetica,sans-serif}
+body{overflow-x:hidden}
+button,a{font:inherit}
+button{cursor:pointer;color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #f6d79b;outline-offset:4px}
+button:disabled{opacity:.5;cursor:default}
+button,input{-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+.room{min-height:100vh;min-height:100dvh;position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse 80% 90% at 51% 52%,#13283c 0%,#0b1725 47%,#060a12 85%),#080d17}
+.room:after{content:"";pointer-events:none;position:absolute;inset:0;z-index:2;background:radial-gradient(ellipse 67% 67% at 50% 49%,transparent 49%,#03070fb5 100%)}
+.light{position:absolute;inset:0;z-index:0;pointer-events:none;transition:opacity .25s;opacity:.72}
+.light .a,.light .b,.light .c,.light .d{position:absolute;display:block;opacity:.44;filter:blur(32px);width:50%;height:70%}
+.light .a{top:-19%;left:-16%;background:radial-gradient(ellipse,var(--hue-a),transparent 69%)}
+.light .b{top:-21%;right:-18%;background:radial-gradient(ellipse,var(--hue-b),transparent 69%)}
+.light .c{bottom:-32%;left:-17%;background:radial-gradient(ellipse,var(--hue-b),transparent 72%)}
+.light .d{bottom:-32%;right:-17%;background:radial-gradient(ellipse,var(--hue-a),transparent 72%)}
+.light .center{position:absolute;display:block;width:70%;height:80%;left:15%;top:8%;background:radial-gradient(ellipse at 50% 48%,var(--hue-a) 0%,var(--hue-b) 26%,transparent 65%);opacity:.22;filter:blur(55px)}
+.room.power-soft .light{opacity:.28}.room.power-balanced .light{opacity:.58}.room.power-radiant .light{opacity:.84}
+.room.power-soft .art{opacity:.65}.room.power-balanced .art{opacity:.85}.room.power-radiant .art{opacity:1}
+.shell{position:relative;z-index:4;min-height:100vh;min-height:100dvh;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;padding:24px 38px 26px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:56px}
+.brand{display:flex;align-items:center;gap:15px;line-height:1.25}
+.monogram{display:grid;place-items:center;border-radius:50%;width:42px;height:42px;border:1px solid #ebcf9d77;background:radial-gradient(circle,#d9b67655,transparent 70%);box-shadow:0 0 20px #b4a66a24;color:var(--hue-a);font-size:23px}
+.brand strong{display:block;letter-spacing:.24em;font-size:12px;font-weight:700}
+.brand small{display:block;color:#c6cfd5;letter-spacing:.13em;font-size:10px;margin-top:3px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.link{color:#bacbd8;text-decoration:none;font-size:12px;letter-spacing:.04em;padding:8px 5px}.link:hover{color:#fff;text-decoration:underline}
+.quiet-pill{display:inline-flex;align-items:center;gap:8px;border:1px solid #8bc9be4d;background:#09212750;color:#a9d7cb;padding:8px 12px;border-radius:99px;font-size:10px;letter-spacing:.1em}
+.quiet-pill:before{content:"";display:block;width:5px;height:5px;border-radius:50%;background:#98d6c0;box-shadow:0 0 6px #98d6c0}
+.copy{position:relative;z-index:4;text-align:center;margin:22px auto 0;max-width:630px}
+.kicker{font-size:10px;font-weight:650;letter-spacing:.3em;color:var(--hue-a)}
+h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line-height:1.1;margin:12px 0 9px}
+.subtitle{font-size:13px;color:#b9c8d0;letter-spacing:.02em;margin:0}
+.canvas{flex:1;position:relative;display:grid;place-items:center;min-height:340px;z-index:3}
+.canvas:before{content:"";position:absolute;inset:11% 18%;border-radius:50%;border:1px solid #a4d2cc0c;box-shadow:0 0 130px #bba16c08;pointer-events:none}
+.art{width:min(75vw,650px);height:min(58vh,510px);max-height:540px;display:block;overflow:visible;filter:drop-shadow(0 0 13px #e3c68d6b) drop-shadow(0 0 42px #5ec8c530);transition:opacity .25s;}
+.art .scene{display:none}.art .scene.active{display:inline}
+.art .outline{fill:none;stroke:var(--hue-a);stroke-width:1.3;opacity:.86}
+.art .secondary{stroke:var(--hue-b);opacity:.7}
+.art .fill-a{fill:var(--hue-a);fill-opacity:.10;stroke:var(--hue-a);stroke-opacity:.88;stroke-width:1.2}
+.art .fill-b{fill:var(--hue-b);fill-opacity:.11;stroke:var(--hue-b);stroke-opacity:.72;stroke-width:1.2}
+.art .fine{stroke-width:.6;opacity:.44}
+.art .beacon{fill:var(--hue-a);opacity:.9;filter:drop-shadow(0 0 11px var(--hue-a))}
+.art .ring{fill:none;stroke:var(--hue-a);stroke-width:.75;opacity:.40}
+.art .dust{fill:var(--hue-b);opacity:.7}
+.art .slow-ring{transform-origin:360px 260px}
+.room.moving .slow-ring{animation:turn 240s linear infinite}
+@keyframes turn{to{transform:rotate(360deg)}}
+.dock{position:relative;z-index:5;max-width:1110px;width:100%;margin:0 auto 3px;border:1px solid #68839564;border-radius:19px;box-shadow:0 18px 80px #00000038, inset 0 1px #ffffff09;background:linear-gradient(120deg,#142537e8,#0f1c2de8);padding:16px 20px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.group{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.group-label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#b5c3cc;margin-right:6px}
+.choice,.command{border:1px solid #57728370;background:#132739;color:#dce6e9;border-radius:9px;font-size:12px;min-height:38px;padding:9px 13px}
+.choice:hover,.command:hover{border-color:#b8d5ce9a;background:#1d3a48}
+.choice[aria-pressed="true"]{color:#181a1b;background:linear-gradient(145deg,#f5dca8,var(--hue-a));border-color:#ebcf9d;box-shadow:0 0 15px #ebcb8b22}
+.command.primary{background:#e2c28c;color:#13212d;border-color:#dfd1ae;font-weight:650}
+.dock-bottom{width:100%;display:flex;gap:12px;align-items:center;justify-content:space-between;border-top:1px solid #a0c2cf17;padding-top:12px}
+.note{font-size:11px;color:#a8b8c4;letter-spacing:.015em}.note strong{font-weight:550;color:#bde8d8}
+.help{font-size:11px;color:#b5c0c9;max-width:700px;margin:12px auto 0;text-align:center;line-height:1.5}
+.help a{color:#e1ccab}
+.minimize{display:none;position:fixed;z-index:10;right:21px;bottom:22px;min-height:42px;background:#122335dd;color:#d5e4e7;border:1px solid #708f99;border-radius:99px;padding:10px 17px;font-size:12px;box-shadow:0 5px 24px #0005}
+.room.quiet-mode .top,.room.quiet-mode .copy,.room.quiet-mode .dock,.room.quiet-mode .help{display:none}
+.room.quiet-mode .minimize{display:block}
+.room.quiet-mode .canvas{min-height:100vh;min-height:100dvh}
+.room.quiet-mode .shell{padding:0}
+.room.quiet-mode .art{height:min(76vh,620px);width:min(85vw,820px)}
+.room.quiet-mode .room-note{display:none}
+.room.full-visual .shell{max-width:none}
+@media(max-width:850px){.shell{padding:18px}.copy{margin-top:12px}.canvas{min-height:320px}.art{width:min(92vw,620px);height:min(43vh,450px)}.dock{justify-content:center}.dock-bottom{justify-content:center;flex-wrap:wrap}}
+@media(max-width:520px){.shell{padding:16px 12px 20px}.top{gap:8px}.brand{gap:8px}.monogram{width:34px;height:34px}.brand strong{font-size:10px}.brand small{font-size:8px}.quiet-pill{display:none}.copy{margin-top:18px}.subtitle{font-size:12px}.canvas{min-height:255px}.art{width:min(94vw,520px);height:min(39vh,335px)}.dock{padding:12px;gap:10px}.group{justify-content:center}.group-label{width:100%;text-align:center;margin:0}.choice{font-size:11px;min-height:36px;padding:8px 9px}.command{font-size:11px}.help{font-size:10px;margin:8px auto 0}.dock-bottom{padding-top:9px}.note{display:none}.room.quiet-mode .art{width:95vw;height:74vh}}
+@media(max-height:660px) and (min-width:651px){.shell{padding-top:14px;padding-bottom:13px}.copy{margin-top:0}.canvas{min-height:210px}.art{height:min(49vh,400px)}.dock{padding:10px 15px}.help{margin-top:6px}}
+@media(prefers-reduced-motion:reduce){.room.moving .slow-ring{animation:none!important}*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="room power-balanced" id="room">
+  <div class="light" aria-hidden="true"><span class="a"></span><span class="b"></span><span class="c"></span><span class="d"></span><span class="center"></span></div>
+  <div class="shell">
+    <header class="top">
+      <div class="brand"><span class="monogram" aria-hidden="true">✧</span><span><strong>RADIANCE</strong><small>LIGHT ROOM / ORIGINAL VISUAL ART</small></span></div>
+      <div class="top-actions"><span class="quiet-pill">SILENT BY DESIGN</span><a class="link" href="./light-room.html" download="Radiance-Light-Room.html">Save offline copy</a><a class="link" id="back-studio" href="./index.html">Back to studio</a></div>
+    </header>
+    <section class="copy" aria-label="Light Room introduction">
+      <div class="kicker">AN OPEN FIELD OF LIGHT</div>
+      <h1>Stay in the glow.</h1>
+      <p class="subtitle">Choose a form. Set the color. Let the light be still.</p>
+    </section>
+    <main class="canvas" id="canvas" aria-label="Original ambient light artwork">
+      <svg class="art" viewBox="0 0 720 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Original geometric light composition" focusable="false">
+        <defs>
+          <radialGradient id="mist"><stop offset="0" stop-color="#fff8dc" stop-opacity=".32"/><stop offset=".35" stop-color="#ffdca5" stop-opacity=".12"/><stop offset="1" stop-color="#e4c28f" stop-opacity="0"/></radialGradient>
+          <radialGradient id="mistsmall"><stop offset="0" stop-color="#f7eee0" stop-opacity=".52"/><stop offset="1" stop-color="#dfc9a0" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle cx="360" cy="268" r="246" fill="url(#mist)" />
+        <g class="slow-ring" aria-hidden="true">
+          <circle class="ring" cx="360" cy="268" r="192" stroke-dasharray="2 12"/>
+          <circle class="ring" cx="360" cy="268" r="217" stroke-dasharray="1 16"/>
+          <circle class="ring" cx="360" cy="268" r="229" stroke-dasharray="1 24"/>
+        </g>
+        <g class="scene active" id="scene-pyramid">
+          <path class="fill-a" d="M360 74 L145 364 L362 423 Z"/>
+          <path class="fill-b" d="M360 74 L362 423 L575 364 Z"/>
+          <path class="outline" d="M360 74 L145 364 L362 423 L575 364 Z"/>
+          <path class="outline fine" d="M360 74 V422 M145 364 L575 364 M145 364 L360 74 L575 364"/>
+          <path class="secondary fine" fill="none" stroke-width="1" d="M200 291 Q360 324 520 291 M170 339 Q360 390 550 339 M270 194 L362 423 L450 194"/>
+          <path class="secondary" fill="none" stroke-width="1" opacity=".48" d="M360 45 V466 M126 364 H594 M360 74 L360 423"/>
+          <path class="outline fine" d="M214 450 L360 483 L505 450 M216 466 L360 500 L503 466"/>
+          <circle class="beacon" cx="360" cy="74" r="5"/>
+          <circle cx="360" cy="74" r="28" fill="url(#mistsmall)"/>
+        </g>
+        <g class="scene" id="scene-halo">
+          <g class="outline" stroke-width="1.4">
+            <ellipse cx="360" cy="270" rx="105" ry="196"/>
+            <ellipse cx="360" cy="270" rx="105" ry="196" transform="rotate(45 360 270)"/>
+            <ellipse cx="360" cy="270" rx="105" ry="196" transform="rotate(90 360 270)"/>
+            <ellipse cx="360" cy="270" rx="105" ry="196" transform="rotate(135 360 270)"/>
+          </g>
+          <circle class="outline secondary" cx="360" cy="270" r="153" />
+          <circle class="beacon" cx="360" cy="270" r="6"/>
+        </g>
+        <g class="scene" id="scene-bloom">
+          <circle class="outline" cx="360" cy="270" r="110"/>
+          <circle class="outline" cx="360" cy="160" r="110"/>
+          <circle class="outline" cx="360" cy="380" r="110"/>
+          <circle class="outline" cx="265" cy="215" r="110"/>
+          <circle class="outline" cx="265" cy="325" r="110"/>
+          <circle class="outline" cx="455" cy="215" r="110"/>
+          <circle class="outline" cx="455" cy="325" r="110"/>
+          <circle class="outline secondary fine" cx="360" cy="270" r="210"/>
+          <circle class="beacon" cx="360" cy="270" r="5"/>
+        </g>
+        <g class="scene" id="scene-prism">
+          <polygon class="fill-a" points="360,74 166,387 360,450"/>
+          <polygon class="fill-b" points="360,74 554,387 360,450"/>
+          <polygon class="outline" points="360,74 166,387 554,387"/>
+          <path class="secondary" stroke-width="1" fill="none" d="M166 387 L360 450 L554 387 M360 74 V450 M166 387 L360 245 L554 387"/>
+          <path class="outline fine" d="M360 115 L196 376 L360 422 L524 376 Z M360 155 L228 366 L360 396 L492 366 Z"/>
+          <circle class="beacon" cx="360" cy="74" r="5"/>
+        </g>
+      </svg>
+    </main>
+    <div class="dock" id="dock" aria-label="Light Room controls">
+      <div class="group" role="group" aria-label="Choose light geometry"><span class="group-label">Form</span><button class="choice" data-scene="pyramid" aria-pressed="true">Pyramid</button><button class="choice" data-scene="halo" aria-pressed="false">Halo</button><button class="choice" data-scene="bloom" aria-pressed="false">Bloom</button><button class="choice" data-scene="prism" aria-pressed="false">Prism</button></div>
+      <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="aurum" aria-pressed="true">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
+      <div class="dock-bottom">
+        <div class="group" role="group" aria-label="Light intensity"><span class="group-label">Glow</span><button class="choice" data-power="soft" aria-pressed="false">Soft</button><button class="choice" data-power="balanced" aria-pressed="true">Warm</button><button class="choice" data-power="radiant" aria-pressed="false">Radiant</button></div>
+        <div class="group"><button class="command" id="motion" aria-pressed="false">Still light</button><button class="command" id="hide-ui">Hide controls</button><button class="command primary" id="fullscreen">Fullscreen</button></div>
+      </div>
+    </div>
+    <p class="help" id="help">Light is visual ambience, not a medical treatment. No flashing, sound, tracking, or internet needed after saving this file. Allow screen breaks, and let your computer sleep when appropriate.</p>
+  </div>
+  <button class="minimize" id="restore-ui" aria-label="Show Light Room controls">Show controls</button>
+</div>
+<script>
+(function(){'use strict';
+  var room=document.getElementById('room');
+  var colorSets={aurum:['#f2cd91','#84d6d2'],aurora:['#9eeac3','#91cee5'],ocean:['#9ecbfa','#7fdfe6'],violet:['#cfb8f7','#9dcae7'],rose:['#f0b6ca','#e5c18f']};
+  var scene='pyramid',color='aurum',power='balanced',motion=false;
+  var reduce=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
+  function mark(name,value){var buttons=document.querySelectorAll('[data-'+name+']');for(var i=0;i<buttons.length;i++)buttons[i].setAttribute('aria-pressed',buttons[i].getAttribute('data-'+name)===value?'true':'false');}
+  function pickScene(value){if(['pyramid','halo','bloom','prism'].indexOf(value)<0)return;scene=value;var list=['pyramid','halo','bloom','prism'];for(var i=0;i<list.length;i++){var el=document.getElementById('scene-'+list[i]);el.setAttribute('class',list[i]===value?'scene active':'scene');}mark('scene',value);}
+  function pickColor(value){if(!colorSets[value])return;color=value;room.style.setProperty('--hue-a',colorSets[value][0]);room.style.setProperty('--hue-b',colorSets[value][1]);mark('color',value);}
+  function pickPower(value){if(['soft','balanced','radiant'].indexOf(value)<0)return;room.classList.remove('power-soft','power-balanced','power-radiant');room.classList.add('power-'+value);power=value;mark('power',value);}
+  function updateMotion(){var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;room.classList.toggle('moving',allowed);var btn=document.getElementById('motion');btn.setAttribute('aria-pressed',motion?'true':'false');btn.textContent=allowed?'Pause motion':motion?'Motion unavailable · still':'Still light';}
+  function quiet(on){room.classList.toggle('quiet-mode',!!on);if(on)document.getElementById('restore-ui').focus();else document.getElementById('hide-ui').focus();}
+  var btns=document.querySelectorAll('[data-scene],[data-color],[data-power]');for(var i=0;i<btns.length;i++)btns[i].addEventListener('click',function(){var a=this.getAttribute('data-scene'),b=this.getAttribute('data-color'),c=this.getAttribute('data-power');if(a)pickScene(a);if(b)pickColor(b);if(c)pickPower(c);});
+  document.getElementById('motion').addEventListener('click',function(){motion=!motion;updateMotion();});
+  document.getElementById('hide-ui').addEventListener('click',function(){quiet(true);});
+  document.getElementById('restore-ui').addEventListener('click',function(){quiet(false);});
+  var fullBtn=document.getElementById('fullscreen');
+  function syncFull(){var on=!!(document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement);room.classList.toggle('full-visual',on);fullBtn.textContent=on?'Exit fullscreen':'Fullscreen';}
+  fullBtn.addEventListener('click',function(){var doc=document,active=doc.fullscreenElement||doc.webkitFullscreenElement||doc.mozFullScreenElement;if(active){var exit=doc.exitFullscreen||doc.webkitExitFullscreen||doc.mozCancelFullScreen;if(exit)try{exit.call(doc);}catch(e){}}else{var el=room,enter=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen;if(enter)try{var result=enter.call(el);if(result&&result.catch)result.catch(function(){});}catch(e){}}});
+  document.addEventListener('fullscreenchange',syncFull);document.addEventListener('webkitfullscreenchange',syncFull);document.addEventListener('mozfullscreenchange',syncFull);
+  document.addEventListener('visibilitychange',updateMotion);
+  if(reduce){if(reduce.addEventListener)reduce.addEventListener('change',updateMotion);else if(reduce.addListener)reduce.addListener(updateMotion);}
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&room.classList.contains('quiet-mode'))quiet(false);});
+  if(window.location.protocol==='file:')document.getElementById('back-studio').hidden=true;
+  pickScene(scene);pickColor(color);pickPower(power);updateMotion();
+})();
+</script>
+</body>
+</html>

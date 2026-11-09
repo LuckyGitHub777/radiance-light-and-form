@@ -56,6 +56,19 @@ class ReleaseTest(unittest.TestCase):
             self.assertIn(policy,meta.group(0),f'Browser CSP stale for {element}')
             self.assertIn(policy,headers,f'Host CSP stale for {element}')
 
+    def test_light_room_csp(self):
+        html=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        meta=re.search(r'<meta http-equiv="Content-Security-Policy"[^>]*>',html)
+        self.assertIsNotNone(meta,'Light Room missing CSP')
+        self.assertIn("connect-src 'none'",meta.group(0))
+        for element,directive in (('style','style-src'),('script','script-src')):
+            blocks=re.findall(fr'<{element}>(.*?)</{element}>',html,re.S)
+            self.assertEqual(len(blocks),1,f'Exactly one {element} block required')
+            digest=base64.b64encode(hashlib.sha256(blocks[0].encode('utf-8')).digest()).decode('ascii')
+            self.assertIn(f"{directive} 'sha256-{digest}'",meta.group(0))
+        self.assertIn('download="Radiance-Light-Room.html"',html)
+        self.assertIn('prefers-reduced-motion:reduce',html)
+
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
             with self.subTest(path=path.name):
