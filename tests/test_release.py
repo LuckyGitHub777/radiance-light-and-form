@@ -69,6 +69,17 @@ class ReleaseTest(unittest.TestCase):
         self.assertIn('download="Radiance-Light-Room.html"',html)
         self.assertIn('prefers-reduced-motion:reduce',html)
 
+
+    def test_light_pattern_controls(self):
+        html=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        self.assertIn('data-pattern="linear" aria-pressed="true"',html)
+        self.assertIn('data-pattern="organic" aria-pressed="false"',html)
+        self.assertIn("pattern='linear'",html)
+        self.assertIn("room.classList.add('pattern-linear')",html)
+        self.assertIn("pattern==='linear'",html)
+        self.assertIn('prefers-reduced-motion:reduce',html)
+        self.assertIn('syncField(allowed)',html)
+
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
             with self.subTest(path=path.name):
