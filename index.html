@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
-<meta name="description" content="A lightweight, offline-capable visual workspace with geometric patterns, optional motion, a focus timer, and transparent energy-cost estimates.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-X111a9zrwAbWZ3AUQ9I1nf3kRdtfk8I0Av3vZXlKZ3o='; script-src 'sha256-6MuAXRtWtSQUf15Su/cHHOG0GIuc/fwZUlSWoIT1/hI='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="description" content="A lightweight, self-contained visual workspace with geometric patterns, optional motion, a focus timer, and transparent energy-cost estimates.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-q/TAlSC2KRXuAw8UL+uM1xQlbZkrx0UtsaQmNxOxhEs='; script-src 'sha256-6MuAXRtWtSQUf15Su/cHHOG0GIuc/fwZUlSWoIT1/hI='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Radiance — Quiet Visual Workspace</title>
 <style>
 :root{--bg:#080d17;--panel:#111c2c;--line:#304050;--text:#f6f4eb;--muted:#a7b7c5;--gold:#ebc985;--teal:#8be1d0;--good:#a8e6bf;--warm:#edb6aa;--accent:#ebc985;--accent2:#8be1d0}
@@ -96,6 +96,12 @@ body.immersive .stage-message{margin-top:min(56vh,420px)}
 .field input[aria-invalid=true]{border-color:#efaf9f;outline-offset:2px}
 /* Dense laptop-height layout: expose the controls without heavy resizing on mobile. */
 @media(min-width:1031px) and (max-height:850px){.shell{padding-top:14px}.top{padding-bottom:12px}.hero{margin:15px 0 14px}.hero h1{font-size:clamp(29px,4vw,45px);margin:6px 0}.stage{height:285px}.stage-message{margin-top:192px}.orbit{height:240px;width:240px}.stage-tools{padding:10px 15px}.pattern-strip{padding:0 15px 10px}.quality-line{padding:0 15px 9px}.sidebox{padding:12px 15px}.side{gap:8px}.sidebox .rule{margin:9px 0}.sidebox p{margin-bottom:8px}.intention{margin:7px 0 4px;font-size:21px}.nav{margin-top:12px}}
+/* Radiance lightfield: steady visible luminance without flashing or required motion. */
+.stage .light-field{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.19;filter:blur(25px);background:radial-gradient(ellipse 27% 35% at 50% 42%,var(--accent),transparent 88%),radial-gradient(ellipse 25% 34% at 53% 48%,var(--accent2),transparent 90%)}
+.stage .orbit{z-index:1;filter:drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 12px var(--accent2))}
+.stage .orbit .core{fill:#ffedc1;opacity:.98;filter:drop-shadow(0 0 9px var(--accent)) drop-shadow(0 0 19px var(--accent2))}
+.stage .stage-message{z-index:2;text-shadow:0 2px 12px #040a14,0 0 21px #142b43}
+@media(max-width:390px){.stage .light-field{opacity:.15;filter:blur(20px)}.stage .orbit{filter:drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 9px var(--accent2))}}
 </style>
 </head>
 <body>
@@ -110,6 +116,7 @@ body.immersive .stage-message{margin-top:min(56vh,420px)}
 <div class="layout">
   <section class="panel">
     <div class="stage" id="stage" role="group" aria-label="Static luminous geometry, with optional very slow motion">
+      <div class="light-field" aria-hidden="true"></div>
       <div class="gridline" aria-hidden="true"></div>
       <div class="stage-info">VISUAL STUDIO</div>
       <button class="ghost fullscreen-control" id="immersive" type="button" aria-pressed="false">Enter sanctuary <span aria-hidden="true">↗</span></button>
@@ -189,10 +196,10 @@ body.immersive .stage-message{margin-top:min(56vh,420px)}
 </div>
 <div id="panel-about" class="content" role="tabpanel" aria-labelledby="tab-about" hidden>
   <section class="panel detailbox"><div class="eyebrow">About the experience</div><h2>A quiet visual workspace.</h2><p>Radiance presents original geometric visuals with optional slow movement, a session timer, a single-action focus panel, and a transparent cost calculator.</p><p>This is an ambient visual and productivity interface, not a medical treatment or a substitute for professional care. It does not measure health effects or provide therapeutic claims.</p></section>
-  <section class="panel detailbox"><div class="eyebrow">Lightweight by design</div><h2>Static first. Offline by design.</h2><p>No frameworks, videos, WebGL, external fonts, libraries, tracking, analytics, network requests, credentials or persistent browser storage. Motion is off by default, has one deliberately slow transform, and respects reduced-motion preferences.</p><p class="small">This static page works offline or over HTTPS. It has no accounts or synchronization.</p><div class="offline"><span class="dot"></span>No network requests or analytics</div></section>
+  <section class="panel detailbox"><div class="eyebrow">Lightweight by design</div><h2>Lightweight by design. Ready to explore.</h2><p>No frameworks, videos, WebGL, external fonts, libraries, tracking, analytics, network requests, credentials or persistent browser storage. Motion is off by default, has one deliberately slow transform, and respects reduced-motion preferences.</p><p class="small">This static page works in your browser or as a saved copy. It has no accounts or synchronization.</p><div class="offline"><span class="dot"></span>No network requests or analytics</div></section>
 </div>
 </main>
-<footer class="footer"><span>Radiance · v0.5.3 · Quiet Visual Workspace</span><span>Offline capable · Silent by default · No sign-in</span></footer>
+<footer class="footer"><span>Radiance · v0.5.3 · Quiet Visual Workspace</span><span>Self-contained · Silent by default · No sign-in</span></footer>
 </div>
 <script>
 (function(){'use strict';
