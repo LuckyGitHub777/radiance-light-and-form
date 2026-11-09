@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="description" content="Radiance Light Room: original ambient luminous geometry for a quiet, private, offline visual experience.">
 <title>Radiance — Light Room</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-/8sz1YZ19nJ60yAUJcmFH8KKTsWjS8D38dPi6SOgyeQ='; script-src 'sha256-MZRn4Ttv3O/O3HJUwyBVYjkbbbu+zgwOVlE728dFSvg='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7d5V44j3Nob1dFDSSn/UWTz7Dd1T6EndcCECJvpEdYU='; script-src 'sha256-5dtbcjbVRmUZWBgCg86lV8324MZ3LxEW/3ni9J8hE3I='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <style>
 :root{--hue-a:#f2cd91;--hue-b:#84d6d2;--hue-c:#d5a76b;--vignette:#070b13;--text:#f4f0e8;--muted:#b6c2cb}
 *{box-sizing:border-box}
@@ -81,6 +81,52 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 @media(max-width:520px){.shell{padding:16px 12px 20px}.top{gap:8px}.brand{gap:8px}.monogram{width:34px;height:34px}.brand strong{font-size:10px}.brand small{font-size:8px}.quiet-pill{display:none}.copy{margin-top:18px}.subtitle{font-size:12px}.canvas{min-height:255px}.art{width:min(94vw,520px);height:min(39vh,335px)}.dock{padding:12px;gap:10px}.group{justify-content:center}.group-label{width:100%;text-align:center;margin:0}.choice{font-size:11px;min-height:36px;padding:8px 9px}.command{font-size:11px}.help{font-size:10px;margin:8px auto 0}.dock-bottom{padding-top:9px}.note{display:none}.room.quiet-mode .art{width:95vw;height:74vh}}
 @media(max-height:660px) and (min-width:651px){.shell{padding-top:14px;padding-bottom:13px}.copy{margin-top:0}.canvas{min-height:210px}.art{height:min(49vh,400px)}.dock{padding:10px 15px}.help{margin-top:6px}}
 @media(prefers-reduced-motion:reduce){.room.moving .slow-ring{animation:none!important}*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+
+/* Optional original light flow: no flash cuts, default remains still for accessibility and older computers. */
+.room.moving .slow-ring{animation:turn 75s linear infinite}
+.room.moving .light .center{animation:ambient-breathe 9s ease-in-out infinite alternate}
+.room.moving .light .a{animation:aurora-west 22s ease-in-out infinite alternate}
+.room.moving .light .b{animation:aurora-east 26s ease-in-out infinite alternate}
+.room.moving .art .beacon{animation:beacon-breathe 8s ease-in-out infinite alternate}
+.room.moving .art .scene.active .outline{animation:line-shimmer 13s ease-in-out infinite alternate}
+.room.moving .art .scene.active .fill-a{animation:facet-glow 7s ease-in-out infinite alternate}
+.room.moving .art .scene.active .fill-b{animation:facet-glow 9s ease-in-out infinite alternate-reverse}
+@keyframes ambient-breathe{from{opacity:.20;transform:scale(.94)}to{opacity:.43;transform:scale(1.09)}}
+@keyframes aurora-west{from{opacity:.34;transform:translate3d(-4%,2%,0)}to{opacity:.61;transform:translate3d(10%,-4%,0)}}
+@keyframes aurora-east{from{opacity:.32;transform:translate3d(5%,-3%,0)}to{opacity:.60;transform:translate3d(-9%,4%,0)}}
+@keyframes beacon-breathe{from{opacity:.65}to{opacity:1}}
+@keyframes line-shimmer{from{opacity:.65}to{opacity:.98}}
+@keyframes facet-glow{from{fill-opacity:.07}to{fill-opacity:.27}}
+@media(prefers-reduced-motion:reduce){.room.moving *{animation:none!important}}
+
+/* Original Radiance Motion Study: continuous kinetic light; never flashes. */
+.light-stream{opacity:.13;transition:opacity .6s ease;pointer-events:none}
+.light-stream .stripe-a{stroke:var(--hue-a)}
+.light-stream .stripe-b{stroke:var(--hue-b)}
+.room.moving .light-stream{opacity:.74}
+.room.moving .stream-left .stream-tracks{animation:surface-down 10s linear infinite}
+.room.moving .stream-right .stream-tracks{animation:surface-up 13s linear infinite}
+.room.moving .stream-prism .stream-tracks{animation:surface-down 9s linear infinite}
+.room.moving .halo-flow{animation:orbit-art 24s linear infinite;transform-origin:360px 270px}
+.room.moving .bloom-flow{animation:orbit-art-back 36s linear infinite;transform-origin:360px 270px}
+.halo-flow,.bloom-flow{opacity:.24}
+.room.moving .halo-flow,.room.moving .bloom-flow{opacity:.6}
+@keyframes surface-down{to{transform:translateY(56px)}}
+@keyframes surface-up{to{transform:translateY(-56px)}}
+@keyframes orbit-art{to{transform:rotate(360deg)}}
+@keyframes orbit-art-back{to{transform:rotate(-360deg)}}
+/* Paces alter motion visibly without introducing jarring jumps. */
+.room.speed-drift.moving .stream-left .stream-tracks{animation-duration:20s}
+.room.speed-drift.moving .stream-right .stream-tracks{animation-duration:26s}
+.room.speed-drift.moving .stream-prism .stream-tracks{animation-duration:18s}
+.room.speed-drift.moving .halo-flow{animation-duration:44s}
+.room.speed-drift.moving .bloom-flow{animation-duration:60s}
+.room.speed-vivid.moving .stream-left .stream-tracks{animation-duration:6s}
+.room.speed-vivid.moving .stream-right .stream-tracks{animation-duration:8s}
+.room.speed-vivid.moving .stream-prism .stream-tracks{animation-duration:6s}
+.room.speed-vivid.moving .halo-flow{animation-duration:17s}
+.room.speed-vivid.moving .bloom-flow{animation-duration:23s}
+@media(prefers-reduced-motion:reduce){.room.moving .stream-tracks,.room.moving .halo-flow,.room.moving .bloom-flow{animation:none!important}}
 </style>
 </head>
 <body>
@@ -94,13 +140,17 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
     <section class="copy" aria-label="Light Room introduction">
       <div class="kicker">AN OPEN FIELD OF LIGHT</div>
       <h1>Stay in the glow.</h1>
-      <p class="subtitle">Choose a form. Set the color. Let the light be still.</p>
+      <p class="subtitle">Living color in continuous, quiet motion. Pause the light at any moment.</p>
     </section>
     <main class="canvas" id="canvas" aria-label="Original ambient light artwork">
       <svg class="art" viewBox="0 0 720 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Original geometric light composition" focusable="false">
         <defs>
           <radialGradient id="mist"><stop offset="0" stop-color="#fff8dc" stop-opacity=".32"/><stop offset=".35" stop-color="#ffdca5" stop-opacity=".12"/><stop offset="1" stop-color="#e4c28f" stop-opacity="0"/></radialGradient>
           <radialGradient id="mistsmall"><stop offset="0" stop-color="#f7eee0" stop-opacity=".52"/><stop offset="1" stop-color="#dfc9a0" stop-opacity="0"/></radialGradient>
+        
+          <clipPath id="face-left"><path d="M360 74 L145 364 L362 423 Z"/></clipPath>
+          <clipPath id="face-right"><path d="M360 74 L362 423 L575 364 Z"/></clipPath>
+          <clipPath id="prism-area"><path d="M360 74 L166 387 L360 450 L554 387 Z"/></clipPath>
         </defs>
         <circle cx="360" cy="268" r="246" fill="url(#mist)" />
         <g class="slow-ring" aria-hidden="true">
@@ -109,6 +159,162 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <circle class="ring" cx="360" cy="268" r="229" stroke-dasharray="1 24"/>
         </g>
         <g class="scene active" id="scene-pyramid">
+          <g class="light-stream stream-left" clip-path="url(#face-left)" aria-hidden="true">
+          <g class="stream-tracks">
+          <line class="stripe-a" x1="125" y1="-168" x2="595" y2="-168" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="-159" x2="595" y2="-159" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="-148" x2="595" y2="-148" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="-135" x2="595" y2="-135" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="-124" x2="595" y2="-124" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="-112" x2="595" y2="-112" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="-103" x2="595" y2="-103" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="-92" x2="595" y2="-92" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="-79" x2="595" y2="-79" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="-68" x2="595" y2="-68" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="-56" x2="595" y2="-56" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="-47" x2="595" y2="-47" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="-36" x2="595" y2="-36" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="-23" x2="595" y2="-23" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="-12" x2="595" y2="-12" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="0" x2="595" y2="0" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="9" x2="595" y2="9" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="20" x2="595" y2="20" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="33" x2="595" y2="33" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="44" x2="595" y2="44" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="56" x2="595" y2="56" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="65" x2="595" y2="65" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="76" x2="595" y2="76" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="89" x2="595" y2="89" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="100" x2="595" y2="100" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="112" x2="595" y2="112" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="121" x2="595" y2="121" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="132" x2="595" y2="132" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="145" x2="595" y2="145" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="156" x2="595" y2="156" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="168" x2="595" y2="168" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="177" x2="595" y2="177" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="188" x2="595" y2="188" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="201" x2="595" y2="201" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="212" x2="595" y2="212" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="224" x2="595" y2="224" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="233" x2="595" y2="233" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="244" x2="595" y2="244" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="257" x2="595" y2="257" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="268" x2="595" y2="268" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="280" x2="595" y2="280" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="289" x2="595" y2="289" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="300" x2="595" y2="300" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="313" x2="595" y2="313" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="324" x2="595" y2="324" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="336" x2="595" y2="336" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="345" x2="595" y2="345" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="356" x2="595" y2="356" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="369" x2="595" y2="369" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="380" x2="595" y2="380" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="392" x2="595" y2="392" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="401" x2="595" y2="401" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="412" x2="595" y2="412" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="425" x2="595" y2="425" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="436" x2="595" y2="436" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="448" x2="595" y2="448" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="457" x2="595" y2="457" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="468" x2="595" y2="468" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="481" x2="595" y2="481" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="492" x2="595" y2="492" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="504" x2="595" y2="504" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="513" x2="595" y2="513" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="524" x2="595" y2="524" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="537" x2="595" y2="537" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="548" x2="595" y2="548" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="560" x2="595" y2="560" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="569" x2="595" y2="569" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="580" x2="595" y2="580" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="593" x2="595" y2="593" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="604" x2="595" y2="604" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="616" x2="595" y2="616" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="625" x2="595" y2="625" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="636" x2="595" y2="636" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="649" x2="595" y2="649" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="660" x2="595" y2="660" stroke-width="1.8" opacity="0.43"/>
+          </g></g>
+          <g class="light-stream stream-right" clip-path="url(#face-right)" aria-hidden="true">
+          <g class="stream-tracks">
+          <line class="stripe-a" x1="125" y1="-168" x2="595" y2="-168" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="-159" x2="595" y2="-159" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="-148" x2="595" y2="-148" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="-135" x2="595" y2="-135" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="-124" x2="595" y2="-124" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="-112" x2="595" y2="-112" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="-103" x2="595" y2="-103" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="-92" x2="595" y2="-92" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="-79" x2="595" y2="-79" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="-68" x2="595" y2="-68" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="-56" x2="595" y2="-56" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="-47" x2="595" y2="-47" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="-36" x2="595" y2="-36" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="-23" x2="595" y2="-23" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="-12" x2="595" y2="-12" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="0" x2="595" y2="0" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="9" x2="595" y2="9" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="20" x2="595" y2="20" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="33" x2="595" y2="33" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="44" x2="595" y2="44" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="56" x2="595" y2="56" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="65" x2="595" y2="65" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="76" x2="595" y2="76" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="89" x2="595" y2="89" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="100" x2="595" y2="100" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="112" x2="595" y2="112" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="121" x2="595" y2="121" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="132" x2="595" y2="132" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="145" x2="595" y2="145" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="156" x2="595" y2="156" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="168" x2="595" y2="168" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="177" x2="595" y2="177" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="188" x2="595" y2="188" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="201" x2="595" y2="201" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="212" x2="595" y2="212" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="224" x2="595" y2="224" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="233" x2="595" y2="233" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="244" x2="595" y2="244" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="257" x2="595" y2="257" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="268" x2="595" y2="268" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="280" x2="595" y2="280" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="289" x2="595" y2="289" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="300" x2="595" y2="300" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="313" x2="595" y2="313" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="324" x2="595" y2="324" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="336" x2="595" y2="336" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="345" x2="595" y2="345" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="356" x2="595" y2="356" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="369" x2="595" y2="369" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="380" x2="595" y2="380" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="392" x2="595" y2="392" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="401" x2="595" y2="401" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="412" x2="595" y2="412" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="425" x2="595" y2="425" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="436" x2="595" y2="436" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="448" x2="595" y2="448" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="457" x2="595" y2="457" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="468" x2="595" y2="468" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="481" x2="595" y2="481" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="492" x2="595" y2="492" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="504" x2="595" y2="504" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="513" x2="595" y2="513" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="524" x2="595" y2="524" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="537" x2="595" y2="537" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="548" x2="595" y2="548" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="560" x2="595" y2="560" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="569" x2="595" y2="569" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="580" x2="595" y2="580" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="593" x2="595" y2="593" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="604" x2="595" y2="604" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="125" y1="616" x2="595" y2="616" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="125" y1="625" x2="595" y2="625" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="125" y1="636" x2="595" y2="636" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="125" y1="649" x2="595" y2="649" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="125" y1="660" x2="595" y2="660" stroke-width="1.8" opacity="0.43"/>
+          </g></g>
           <path class="fill-a" d="M360 74 L145 364 L362 423 Z"/>
           <path class="fill-b" d="M360 74 L362 423 L575 364 Z"/>
           <path class="outline" d="M360 74 L145 364 L362 423 L575 364 Z"/>
@@ -120,6 +326,12 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <circle cx="360" cy="74" r="28" fill="url(#mistsmall)"/>
         </g>
         <g class="scene" id="scene-halo">
+          <g class="halo-flow" aria-hidden="true">
+            <ellipse cx="360" cy="270" rx="183" ry="48" class="outline secondary"/>
+            <ellipse cx="360" cy="270" rx="48" ry="183" class="outline"/>
+            <circle cx="360" cy="270" r="75" class="outline fine"/>
+          </g>
+
           <g class="outline" stroke-width="1.4">
             <ellipse cx="360" cy="270" rx="105" ry="196"/>
             <ellipse cx="360" cy="270" rx="105" ry="196" transform="rotate(45 360 270)"/>
@@ -130,6 +342,13 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <circle class="beacon" cx="360" cy="270" r="6"/>
         </g>
         <g class="scene" id="scene-bloom">
+          <g class="bloom-flow" aria-hidden="true">
+            <circle class="outline secondary" cx="360" cy="270" r="70"/>
+            <circle class="outline" cx="360" cy="159" r="70"/>
+            <circle class="outline" cx="455" cy="325" r="70"/>
+            <circle class="outline" cx="265" cy="325" r="70"/>
+          </g>
+
           <circle class="outline" cx="360" cy="270" r="110"/>
           <circle class="outline" cx="360" cy="160" r="110"/>
           <circle class="outline" cx="360" cy="380" r="110"/>
@@ -141,6 +360,84 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <circle class="beacon" cx="360" cy="270" r="5"/>
         </g>
         <g class="scene" id="scene-prism">
+          <g class="light-stream stream-prism" clip-path="url(#prism-area)" aria-hidden="true">
+          <g class="stream-tracks">
+          <line class="stripe-a" x1="126" y1="-168" x2="596" y2="-168" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="-159" x2="596" y2="-159" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="-148" x2="596" y2="-148" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="-135" x2="596" y2="-135" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="-124" x2="596" y2="-124" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="-112" x2="596" y2="-112" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="-103" x2="596" y2="-103" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="-92" x2="596" y2="-92" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="-79" x2="596" y2="-79" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="-68" x2="596" y2="-68" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="-56" x2="596" y2="-56" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="-47" x2="596" y2="-47" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="-36" x2="596" y2="-36" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="-23" x2="596" y2="-23" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="-12" x2="596" y2="-12" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="0" x2="596" y2="0" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="9" x2="596" y2="9" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="20" x2="596" y2="20" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="33" x2="596" y2="33" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="44" x2="596" y2="44" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="56" x2="596" y2="56" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="65" x2="596" y2="65" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="76" x2="596" y2="76" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="89" x2="596" y2="89" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="100" x2="596" y2="100" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="112" x2="596" y2="112" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="121" x2="596" y2="121" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="132" x2="596" y2="132" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="145" x2="596" y2="145" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="156" x2="596" y2="156" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="168" x2="596" y2="168" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="177" x2="596" y2="177" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="188" x2="596" y2="188" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="201" x2="596" y2="201" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="212" x2="596" y2="212" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="224" x2="596" y2="224" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="233" x2="596" y2="233" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="244" x2="596" y2="244" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="257" x2="596" y2="257" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="268" x2="596" y2="268" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="280" x2="596" y2="280" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="289" x2="596" y2="289" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="300" x2="596" y2="300" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="313" x2="596" y2="313" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="324" x2="596" y2="324" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="336" x2="596" y2="336" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="345" x2="596" y2="345" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="356" x2="596" y2="356" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="369" x2="596" y2="369" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="380" x2="596" y2="380" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="392" x2="596" y2="392" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="401" x2="596" y2="401" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="412" x2="596" y2="412" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="425" x2="596" y2="425" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="436" x2="596" y2="436" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="448" x2="596" y2="448" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="457" x2="596" y2="457" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="468" x2="596" y2="468" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="481" x2="596" y2="481" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="492" x2="596" y2="492" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="504" x2="596" y2="504" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="513" x2="596" y2="513" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="524" x2="596" y2="524" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="537" x2="596" y2="537" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="548" x2="596" y2="548" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="560" x2="596" y2="560" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="569" x2="596" y2="569" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="580" x2="596" y2="580" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="593" x2="596" y2="593" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="604" x2="596" y2="604" stroke-width="1.8" opacity="0.43"/>
+          <line class="stripe-a" x1="126" y1="616" x2="596" y2="616" stroke-width="2.4" opacity="0.63"/>
+          <line class="stripe-b" x1="126" y1="625" x2="596" y2="625" stroke-width="1.1" opacity="0.42"/>
+          <line class="stripe-b" x1="126" y1="636" x2="596" y2="636" stroke-width="3" opacity="0.5"/>
+          <line class="stripe-a" x1="126" y1="649" x2="596" y2="649" stroke-width="1.1" opacity="0.3"/>
+          <line class="stripe-a" x1="126" y1="660" x2="596" y2="660" stroke-width="1.8" opacity="0.43"/>
+          </g></g>
           <polygon class="fill-a" points="360,74 166,387 360,450"/>
           <polygon class="fill-b" points="360,74 554,387 360,450"/>
           <polygon class="outline" points="360,74 166,387 554,387"/>
@@ -155,7 +452,8 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
       <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="aurum" aria-pressed="true">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
       <div class="dock-bottom">
         <div class="group" role="group" aria-label="Light intensity"><span class="group-label">Glow</span><button class="choice" data-power="soft" aria-pressed="false">Soft</button><button class="choice" data-power="balanced" aria-pressed="true">Warm</button><button class="choice" data-power="radiant" aria-pressed="false">Radiant</button></div>
-        <div class="group"><button class="command" id="motion" aria-pressed="false">Still light</button><button class="command" id="hide-ui">Hide controls</button><button class="command primary" id="fullscreen">Fullscreen</button></div>
+        <div class="group" role="group" aria-label="Light movement speed"><span class="group-label">Flow pace</span><button class="choice" data-speed="drift" aria-pressed="false">Drift</button><button class="choice" data-speed="flow" aria-pressed="true">Flow</button><button class="choice" data-speed="vivid" aria-pressed="false">Vivid</button></div>
+        <div class="group"><button class="command" id="motion" aria-pressed="true">Pause light flow</button><button class="command" id="hide-ui">Hide controls</button><button class="command primary" id="fullscreen">Fullscreen</button></div>
       </div>
     </div>
     <p class="help" id="help">Light is visual ambience, not a medical treatment. No flashing, sound, tracking, or internet needed after saving this file. Allow screen breaks, and let your computer sleep when appropriate.</p>
@@ -166,14 +464,21 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 (function(){'use strict';
   var room=document.getElementById('room');
   var colorSets={aurum:['#f2cd91','#84d6d2'],aurora:['#9eeac3','#91cee5'],ocean:['#9ecbfa','#7fdfe6'],violet:['#cfb8f7','#9dcae7'],rose:['#f0b6ca','#e5c18f']};
-  var scene='pyramid',color='aurum',power='balanced',motion=false;
+  var scene='pyramid',color='aurum',power='balanced',motion=true,speed='flow';
   var reduce=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
   function mark(name,value){var buttons=document.querySelectorAll('[data-'+name+']');for(var i=0;i<buttons.length;i++)buttons[i].setAttribute('aria-pressed',buttons[i].getAttribute('data-'+name)===value?'true':'false');}
   function pickScene(value){if(['pyramid','halo','bloom','prism'].indexOf(value)<0)return;scene=value;var list=['pyramid','halo','bloom','prism'];for(var i=0;i<list.length;i++){var el=document.getElementById('scene-'+list[i]);el.setAttribute('class',list[i]===value?'scene active':'scene');}mark('scene',value);}
   function pickColor(value){if(!colorSets[value])return;color=value;room.style.setProperty('--hue-a',colorSets[value][0]);room.style.setProperty('--hue-b',colorSets[value][1]);mark('color',value);}
   function pickPower(value){if(['soft','balanced','radiant'].indexOf(value)<0)return;room.classList.remove('power-soft','power-balanced','power-radiant');room.classList.add('power-'+value);power=value;mark('power',value);}
-  function updateMotion(){var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;room.classList.toggle('moving',allowed);var btn=document.getElementById('motion');btn.setAttribute('aria-pressed',motion?'true':'false');btn.textContent=allowed?'Pause motion':motion?'Motion unavailable · still':'Still light';}
+  function updateMotion(){var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;room.classList.toggle('moving',allowed);var btn=document.getElementById('motion');btn.setAttribute('aria-pressed',motion?'true':'false');btn.textContent=allowed?'Pause light flow':motion?'Motion unavailable · still':'Start light flow';}
   function quiet(on){room.classList.toggle('quiet-mode',!!on);if(on)document.getElementById('restore-ui').focus();else document.getElementById('hide-ui').focus();}
+  var speedButtons=document.querySelectorAll('[data-speed]');
+  for(var si=0;si<speedButtons.length;si++)speedButtons[si].addEventListener('click',function(){
+    var value=this.getAttribute('data-speed');if(['drift','flow','vivid'].indexOf(value)<0)return;
+    room.classList.remove('speed-drift','speed-flow','speed-vivid');room.classList.add('speed-'+value);
+    speed=value;mark('speed',value);
+  });
+  room.classList.add('speed-flow');
   var btns=document.querySelectorAll('[data-scene],[data-color],[data-power]');for(var i=0;i<btns.length;i++)btns[i].addEventListener('click',function(){var a=this.getAttribute('data-scene'),b=this.getAttribute('data-color'),c=this.getAttribute('data-power');if(a)pickScene(a);if(b)pickColor(b);if(c)pickPower(c);});
   document.getElementById('motion').addEventListener('click',function(){motion=!motion;updateMotion();});
   document.getElementById('hide-ui').addEventListener('click',function(){quiet(true);});
