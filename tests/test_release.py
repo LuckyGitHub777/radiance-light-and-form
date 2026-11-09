@@ -73,6 +73,9 @@ class ReleaseTest(unittest.TestCase):
     def test_light_pattern_controls(self):
         html=(ROOT/'light-room.html').read_text(encoding='utf-8')
         self.assertIn('data-pattern="linear" aria-pressed="true"',html)
+        self.assertIn('data-color="spectrum" aria-pressed="true"',html)
+        self.assertIn("color='spectrum'",html)
+        self.assertIn("spectrum:['#23dcff'",html)
         self.assertIn('data-pattern="organic" aria-pressed="false"',html)
         self.assertIn("pattern='linear'",html)
         self.assertIn("room.classList.add('pattern-linear')",html)
