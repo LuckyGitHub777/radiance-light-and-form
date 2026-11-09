@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="description" content="Radiance Light Room: original ambient luminous geometry for a quiet, private, offline visual experience.">
 <title>Radiance — Light Room</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7d5V44j3Nob1dFDSSn/UWTz7Dd1T6EndcCECJvpEdYU='; script-src 'sha256-5dtbcjbVRmUZWBgCg86lV8324MZ3LxEW/3ni9J8hE3I='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-iNB1rHDkTssfRa2IqoAGqkqge4rztAc4OpXInPbBavA='; script-src 'sha256-5dtbcjbVRmUZWBgCg86lV8324MZ3LxEW/3ni9J8hE3I='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <style>
 :root{--hue-a:#f2cd91;--hue-b:#84d6d2;--hue-c:#d5a76b;--vignette:#070b13;--text:#f4f0e8;--muted:#b6c2cb}
 *{box-sizing:border-box}
@@ -127,6 +127,31 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 .room.speed-vivid.moving .halo-flow{animation-duration:17s}
 .room.speed-vivid.moving .bloom-flow{animation-duration:23s}
 @media(prefers-reduced-motion:reduce){.room.moving .stream-tracks,.room.moving .halo-flow,.room.moving .bloom-flow{animation:none!important}}
+/* Immersive environment: larger geometry with low-contrast peripheral light. */
+.ambient-curtain{display:none;position:absolute;inset:0 auto 0 0;width:31%;height:100%;z-index:1;pointer-events:none;opacity:.19;filter:blur(9px);-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 18%,#000 64%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 18%,#000 64%,transparent 100%);background:
+  radial-gradient(ellipse 90% 66% at 80% 50%,var(--hue-b),transparent 77%),
+  repeating-linear-gradient(180deg,transparent 0 21px,var(--hue-a) 22px 23px,transparent 25px 48px)}
+.ambient-curtain.right{left:auto;right:0;transform:scaleX(-1);background:
+  radial-gradient(ellipse 90% 66% at 80% 50%,var(--hue-a),transparent 77%),
+  repeating-linear-gradient(180deg,transparent 0 23px,var(--hue-b) 24px 25px,transparent 27px 51px)}
+.canvas>.art{position:relative;z-index:2}
+.room.quiet-mode .shell{max-width:none}
+.room.quiet-mode .canvas{width:100%;min-height:100vh;min-height:100dvh}
+.room.quiet-mode .art{width:min(100vw,1600px);height:min(100vh,1040px);max-height:none}
+.room.full-visual:not(.quiet-mode) .art{width:min(91vw,1240px);height:min(66vh,740px);max-height:none}
+.room:is(.quiet-mode,.full-visual) .ambient-curtain{display:block}
+.room.power-soft .ambient-curtain{opacity:.12}
+.room.power-balanced .ambient-curtain{opacity:.19}
+.room.power-radiant .ambient-curtain{opacity:.28}
+/* Moving curtains: transparent, low-contrast, continuous and never strobing. */
+.room.moving .ambient-curtain.left{animation:wing-drift 20s ease-in-out infinite alternate}
+.room.moving .ambient-curtain.right{animation:wing-drift-right 25s ease-in-out infinite alternate}
+.room.speed-drift.moving .ambient-curtain{animation-duration:36s}
+.room.speed-vivid.moving .ambient-curtain{animation-duration:14s}
+@keyframes wing-drift{from{transform:translateY(-18px)}to{transform:translateY(18px)}}
+@keyframes wing-drift-right{from{transform:scaleX(-1) translateY(-18px)}to{transform:scaleX(-1) translateY(18px)}}
+@media(max-width:650px){.ambient-curtain{display:none!important}.room.quiet-mode .art{width:100vw;height:min(99vh,760px)}}
+@media(prefers-reduced-motion:reduce){.room.moving .ambient-curtain{animation:none!important}}
 </style>
 </head>
 <body>
@@ -143,6 +168,8 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
       <p class="subtitle">Living color in continuous, quiet motion. Pause the light at any moment.</p>
     </section>
     <main class="canvas" id="canvas" aria-label="Original ambient light artwork">
+      <div class="ambient-curtain left" aria-hidden="true"></div>
+      <div class="ambient-curtain right" aria-hidden="true"></div>
       <svg class="art" viewBox="0 0 720 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Original geometric light composition" focusable="false">
         <defs>
           <radialGradient id="mist"><stop offset="0" stop-color="#fff8dc" stop-opacity=".32"/><stop offset=".35" stop-color="#ffdca5" stop-opacity=".12"/><stop offset="1" stop-color="#e4c28f" stop-opacity="0"/></radialGradient>
