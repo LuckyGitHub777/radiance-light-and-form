@@ -496,7 +496,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
     </main>
     <div class="dock" id="dock" aria-label="Light Room controls">
       <div class="group" role="group" aria-label="Choose light geometry"><span class="group-label">Form</span><button class="choice" data-scene="pyramid" aria-pressed="true">Pyramid</button><button class="choice" data-scene="halo" aria-pressed="false">Halo</button><button class="choice" data-scene="bloom" aria-pressed="false">Bloom</button><button class="choice" data-scene="prism" aria-pressed="false">Prism</button></div>
-      <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="aurum" aria-pressed="true">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
+      <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="spectrum" aria-pressed="true">Spectrum</button><button class="choice" data-color="aurum" aria-pressed="false">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
       <div class="dock-bottom">
         <div class="group" role="group" aria-label="Choose light pattern"><span class="group-label">Pattern</span><button class="choice" data-pattern="linear" aria-pressed="true">Linear</button><button class="choice" data-pattern="organic" aria-pressed="false">Organic</button></div>
         <div class="group" role="group" aria-label="Light intensity"><span class="group-label">Glow</span><button class="choice" data-power="soft" aria-pressed="false">Soft</button><button class="choice" data-power="balanced" aria-pressed="true">Warm</button><button class="choice" data-power="radiant" aria-pressed="false">Radiant</button></div>
@@ -504,21 +504,22 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
         <div class="group"><button class="command" id="motion" aria-pressed="true">Pause light flow</button><button class="command" id="hide-ui">Hide controls</button><button class="command primary" id="fullscreen">Fullscreen</button></div>
       </div>
     </div>
-    <p class="help" id="help">Linear presents segmented multicolor light; Organic restores curved waves. Visual ambience only, not medical treatment. No flashing, sound, tracking, or internet needed after saving this file. Allow screen breaks, and let your computer sleep when appropriate.</p>
+    <p class="help" id="help">Spectrum presents multicolor light; Amber and other palettes offer softer ambience. Linear uses segmented marks; Organic restores curved waves. Visual ambience only, not medical treatment. No flashing, sound, tracking, or internet needed after saving this file. Allow screen breaks, and let your computer sleep when appropriate.</p>
   </div>
   <button class="minimize" id="restore-ui" aria-label="Show Light Room controls">Show controls</button>
 </div>
 <script>
 (function(){'use strict';
   var room=document.getElementById('room');
-  var colorSets={aurum:['#f2cd91','#84d6d2'],aurora:['#9eeac3','#91cee5'],ocean:['#9ecbfa','#7fdfe6'],violet:['#cfb8f7','#9dcae7'],rose:['#f0b6ca','#e5c18f']};
-  var scene='pyramid',color='aurum',power='balanced',motion=true,speed='flow',pattern='linear';
+  var colorSets={spectrum:['#f2bb63','#6ddafd'],aurum:['#f2cd91','#84d6d2'],aurora:['#9eeac3','#91cee5'],ocean:['#9ecbfa','#7fdfe6'],violet:['#cfb8f7','#9dcae7'],rose:['#f0b6ca','#e5c18f']};
+  var scene='pyramid',color='spectrum',power='balanced',motion=true,speed='flow',pattern='linear';
   var reduce=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
 
   /* Local procedural light. Paths evolve independently inside each geometry,
      are throttled for low-power devices, and stop for Pause/reduced motion/hidden tabs. */
   var fieldGroups={'pyramid':['pyramid-left','pyramid-right'],halo:['halo'],bloom:['bloom'],prism:['prism']};
   var fieldColors={
+    spectrum:['#23dcff','#567aff','#cd56fa','#ff4fa6','#fec157','#43e5a5','#ff745d'],
     aurum:['#f2cd91','#84d6d2','#aab8f7','#e9adcf','#b5e9e2'],
     aurora:['#9eeac3','#91cee5','#b1acfa','#f0bfd6','#e0f9ce'],
     ocean:['#9ecbfa','#7fdfe6','#a6aaf9','#c1eeff','#d6b7ee'],
