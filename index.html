@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="description" content="A lightweight, self-contained visual workspace with geometric patterns, optional motion, a focus timer, and transparent energy-cost estimates.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-q/TAlSC2KRXuAw8UL+uM1xQlbZkrx0UtsaQmNxOxhEs='; script-src 'sha256-6MuAXRtWtSQUf15Su/cHHOG0GIuc/fwZUlSWoIT1/hI='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-8u0oJBc0+JvTgyC84YOluqwRnLky79ApEFXHxBykRko='; script-src 'sha256-6MuAXRtWtSQUf15Su/cHHOG0GIuc/fwZUlSWoIT1/hI='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Radiance — Quiet Visual Workspace</title>
 <style>
 :root{--bg:#080d17;--panel:#111c2c;--line:#304050;--text:#f6f4eb;--muted:#a7b7c5;--gold:#ebc985;--teal:#8be1d0;--good:#a8e6bf;--warm:#edb6aa;--accent:#ebc985;--accent2:#8be1d0}
@@ -102,6 +102,9 @@ body.immersive .stage-message{margin-top:min(56vh,420px)}
 .stage .orbit .core{fill:#ffedc1;opacity:.98;filter:drop-shadow(0 0 9px var(--accent)) drop-shadow(0 0 19px var(--accent2))}
 .stage .stage-message{z-index:2;text-shadow:0 2px 12px #040a14,0 0 21px #142b43}
 @media(max-width:390px){.stage .light-field{opacity:.15;filter:blur(20px)}.stage .orbit{filter:drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 9px var(--accent2))}}
+
+/* Separate, single-file ambient gallery entry; the original studio remains intact. */
+a.room-entry{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:#e4c895;color:#13212e;border-color:#e9d3a6;font-weight:650}a.room-entry:hover{background:#f6dca9}a.room-entry:focus-visible{outline:2px solid #fff1c9;outline-offset:3px}
 </style>
 </head>
 <body>
@@ -164,7 +167,7 @@ body.immersive .stage-message{margin-top:min(56vh,420px)}
       <div class="stage-message"><strong id="stage-title">Take a moment.</strong><span id="stage-sub">Begin with a clear pause.</span></div>
       <div class="sanctuary-timer" id="sanctuary-timer"><span id="sanctuary-time" aria-label="Time remaining">12:00</span><span id="sanctuary-status" role="status" aria-live="polite">Ready to begin</span></div>
     </div>
-    <div class="stage-tools"><div class="button-group"><button class="action secondary" id="motion" aria-pressed="false" type="button">Enable slow motion</button><button class="action secondary" id="dim" type="button" aria-pressed="false">Dim ambience</button></div><div class="select-wrap"><label for="duration">Session</label><select id="duration"><option value="5">5 minutes</option><option value="12" selected>12 minutes</option><option value="25">25 minutes</option></select></div></div>
+    <div class="stage-tools"><div class="button-group"><button class="action secondary" id="motion" aria-pressed="false" type="button">Enable slow motion</button><button class="action secondary" id="dim" type="button" aria-pressed="false">Dim ambience</button><a class="action secondary room-entry" href="./light-room.html">Open Light Room ↗</a></div><div class="select-wrap"><label for="duration">Session</label><select id="duration"><option value="5">5 minutes</option><option value="12" selected>12 minutes</option><option value="25">25 minutes</option></select></div></div>
     <div class="pattern-strip"><span class="caption" id="pattern-description">HALO · Symmetry of overlapping ellipses</span><div class="pattern-buttons" role="group" aria-label="Choose luminous geometry"><button class="pattern-button" type="button" data-pattern="halo" aria-pressed="true">Halo</button><button class="pattern-button" type="button" data-pattern="bloom" aria-pressed="false">Bloom</button><button class="pattern-button" type="button" data-pattern="spiral" aria-pressed="false">φ Spiral</button></div></div>
     <div class="quality-line"><strong id="economy-label">ECO · Stillness</strong><span id="economy-detail">Static visuals, no downloads, no audio, no background tasks</span></div>
   </section>
