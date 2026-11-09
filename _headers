@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'none'; style-src 'sha256-8u0oJBc0+JvTgyC84YOluqwRnLky79ApEFXHxBykRko='; script-src 'sha256-6MuAXRtWtSQUf15Su/cHHOG0GIuc/fwZUlSWoIT1/hI='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'none'; style-src 'sha256-8u0oJBc0+JvTgyC84YOluqwRnLky79ApEFXHxBykRko=' 'sha256-7d5V44j3Nob1dFDSSn/UWTz7Dd1T6EndcCECJvpEdYU='; script-src 'sha256-6MuAXRtWtSQUf15Su/cHHOG0GIuc/fwZUlSWoIT1/hI=' 'sha256-5dtbcjbVRmUZWBgCg86lV8324MZ3LxEW/3ni9J8hE3I='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer
   X-Frame-Options: DENY
