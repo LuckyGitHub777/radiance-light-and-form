@@ -45,7 +45,7 @@ class ReleaseTest(unittest.TestCase):
                 self.assertTrue((path.parent/link).is_file(),f'{path.name}: {link}')
 
     def test_inline_csp_hashes(self):
-        html=(ROOT/'studio.html').read_text(encoding='utf-8')
+        html=(ROOT/'index.html').read_text(encoding='utf-8')
         meta=re.search(r'<meta http-equiv="Content-Security-Policy"[^>]*>',html)
         self.assertIsNotNone(meta,'Missing browser CSP')
         headers=(ROOT/'_headers').read_text(encoding='utf-8')
@@ -171,18 +171,28 @@ class ReleaseTest(unittest.TestCase):
         self.assertIn("power='radiant'",html)
 
 
-    def test_main_route_and_studio_preservation(self):
+    def test_public_entry_and_no_legacy_navigation(self):
         home=(ROOT/'index.html').read_bytes()
         room=(ROOT/'light-room.html').read_bytes()
-        studio=(ROOT/'studio.html').read_text(encoding='utf-8')
-        self.assertEqual(home,room,'Homepage must be the full Light Room, not a redirect')
-        text=home.decode('utf-8')
-        self.assertIn('<title>Radiance — Light Room</title>',text)
-        self.assertNotIn('http-equiv="refresh"',text)
-        self.assertIn('<meta property="og:title" content="Radiance — Light Room">',text)
-        self.assertIn('id="back-studio" href="./studio.html"',text)
-        self.assertIn('<title>Radiance — Quiet Visual Workspace</title>',studio)
-        self.assertIn('href="./light-room.html"',studio)
+        self.assertEqual(home,room,'Both URLs must open the full Light Room')
+        html=home.decode('utf-8')
+        self.assertIn('<h1>Stay in the Glow</h1>',html)
+        self.assertIn('<title>Radiance — Light Room</title>',html)
+        self.assertNotIn('http-equiv="refresh"',html)
+        self.assertNotIn('id="back-studio"',html)
+        self.assertNotIn('<p class="help"',html)
+        self.assertNotIn('<p class="subtitle"',html)
+        self.assertIn('id="offline-download"',html)
+        self.assertIn('<meta property="og:title" content="Radiance — Light Room">',html)
+
+    def test_public_source_inventory(self):
+        expected={'index.html','light-room.html','README.md','QUALITY.md',
+                  '_headers','MANIFEST.sha256','tests/test_release.py',
+                  'tests/browser-smoke.cjs','.github/workflows/verify.yml'}
+        files={p.relative_to(ROOT).as_posix() for p in ROOT.rglob('*')
+               if p.is_file() and '__pycache__' not in p.parts
+               and '.git' not in p.parts}
+        self.assertEqual(files,expected)
 
     def test_light_room_has_no_network_calls(self):
         html=(ROOT/'light-room.html').read_text(encoding='utf-8')
