@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="description" content="Radiance Light Room: original ambient luminous geometry for a quiet, private, offline visual experience.">
 <title>Radiance — Light Room</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-ZnBUdche+HccJrL1gkq8Bsn72i60WfmYZwigHY8LtEU='; script-src 'sha256-9S+SYB2nIiY3Pr+mVf0X2YhbrFMrU37+S0ClpjSlYYc='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-LmaFaUycakXzMxSez7B9BkQ8b/4q2yY3p40i7Q74Nu4='; script-src 'sha256-e8xSJ+hLCuAFH+qkZhppFxnPhvbl7Fd+spG+fQGjvGM='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <style>
 :root{--hue-a:#f2cd91;--hue-b:#84d6d2;--hue-c:#d5a76b;--vignette:#070b13;--text:#f4f0e8;--muted:#b6c2cb}
 *{box-sizing:border-box}
@@ -165,6 +165,17 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 .room.pattern-linear .living-field path{stroke-linecap:square}
 .room.pattern-linear.moving .light-stream{opacity:.19}
 .room.pattern-linear:not(.moving) .light-stream{opacity:.12}
+
+/* Surge accelerates translation and orbital travel without strobe or color cuts. */
+.room.speed-surge.moving .stream-left .stream-tracks{animation-duration:3.4s}
+.room.speed-surge.moving .stream-right .stream-tracks{animation-duration:4.4s}
+.room.speed-surge.moving .stream-prism .stream-tracks{animation-duration:3.6s}
+.room.speed-surge.moving .halo-flow{animation-duration:10s}
+.room.speed-surge.moving .bloom-flow{animation-duration:13s}
+.room.speed-surge.moving .slow-ring{animation-duration:38s}
+.room.speed-surge.moving .ambient-curtain{animation-duration:11s}
+/* Brighter chroma within the existing independent color and glow controls. */
+.room.palette-spectrum .living-field{filter:saturate(1.18)}
 </style>
 </head>
 <body>
@@ -391,17 +402,17 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <g class="bloom-flow" aria-hidden="true">
             <circle class="outline secondary" cx="360" cy="270" r="70"/>
             <circle class="outline" cx="360" cy="159" r="70"/>
-            <circle class="outline" cx="455" cy="325" r="70"/>
-            <circle class="outline" cx="265" cy="325" r="70"/>
+            <circle class="outline" cx="455.263" cy="325" r="70"/>
+            <circle class="outline" cx="264.737" cy="325" r="70"/>
           </g>
 
           <circle class="outline" cx="360" cy="270" r="110"/>
           <circle class="outline" cx="360" cy="160" r="110"/>
           <circle class="outline" cx="360" cy="380" r="110"/>
-          <circle class="outline" cx="265" cy="215" r="110"/>
-          <circle class="outline" cx="265" cy="325" r="110"/>
-          <circle class="outline" cx="455" cy="215" r="110"/>
-          <circle class="outline" cx="455" cy="325" r="110"/>
+          <circle class="outline" cx="264.737" cy="215" r="110"/>
+          <circle class="outline" cx="264.737" cy="325" r="110"/>
+          <circle class="outline" cx="455.263" cy="215" r="110"/>
+          <circle class="outline" cx="455.263" cy="325" r="110"/>
           <circle class="outline secondary fine" cx="360" cy="270" r="210"/>
           <circle class="beacon" cx="360" cy="270" r="5"/>
         </g>
@@ -495,16 +506,16 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
       </svg>
     </main>
     <div class="dock" id="dock" aria-label="Light Room controls">
-      <div class="group" role="group" aria-label="Choose light geometry"><span class="group-label">Form</span><button class="choice" data-scene="pyramid" aria-pressed="true">Pyramid</button><button class="choice" data-scene="halo" aria-pressed="false">Halo</button><button class="choice" data-scene="bloom" aria-pressed="false">Bloom</button><button class="choice" data-scene="prism" aria-pressed="false">Prism</button></div>
+      <div class="group" role="group" aria-label="Choose light geometry"><span class="group-label">Form</span><button class="choice" data-scene="pyramid" aria-pressed="true">Pyramid</button><button class="choice" data-scene="halo" aria-pressed="false">Halo</button><button class="choice" data-scene="bloom" aria-pressed="false" aria-label="Bloom — Seed of Life geometry, seven equal circles" title="Seed of Life · seven congruent circles">Bloom</button><button class="choice" data-scene="prism" aria-pressed="false">Prism</button></div>
       <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="spectrum" aria-pressed="true">Spectrum</button><button class="choice" data-color="aurum" aria-pressed="false">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
       <div class="dock-bottom">
         <div class="group" role="group" aria-label="Choose light pattern"><span class="group-label">Pattern</span><button class="choice" data-pattern="linear" aria-pressed="true">Linear</button><button class="choice" data-pattern="organic" aria-pressed="false">Organic</button></div>
         <div class="group" role="group" aria-label="Light intensity"><span class="group-label">Glow</span><button class="choice" data-power="soft" aria-pressed="false">Soft</button><button class="choice" data-power="balanced" aria-pressed="true">Warm</button><button class="choice" data-power="radiant" aria-pressed="false">Radiant</button></div>
-        <div class="group" role="group" aria-label="Light movement speed"><span class="group-label">Flow pace</span><button class="choice" data-speed="drift" aria-pressed="false">Drift</button><button class="choice" data-speed="flow" aria-pressed="true">Flow</button><button class="choice" data-speed="vivid" aria-pressed="false">Vivid</button></div>
+        <div class="group" role="group" aria-label="Light movement speed"><span class="group-label">Flow pace</span><button class="choice" data-speed="drift" aria-pressed="false">Drift</button><button class="choice" data-speed="flow" aria-pressed="true">Flow</button><button class="choice" data-speed="vivid" aria-pressed="false">Vivid</button><button class="choice" data-speed="surge" aria-pressed="false" title="Fast traveling patterns without intentional flashing">Surge</button></div>
         <div class="group"><button class="command" id="motion" aria-pressed="true">Pause light flow</button><button class="command" id="hide-ui">Hide controls</button><button class="command primary" id="fullscreen">Fullscreen</button></div>
       </div>
     </div>
-    <p class="help" id="help">Spectrum presents multicolor light; Amber and other palettes offer softer ambience. Linear uses segmented marks; Organic restores curved waves. Visual ambience only, not medical treatment. No flashing, sound, tracking, or internet needed after saving this file. Allow screen breaks, and let your computer sleep when appropriate.</p>
+    <p class="help" id="help">Spectrum presents multicolor light; Amber and other palettes offer softer ambience. Linear uses segmented marks; Organic restores curved waves. Visual ambience only, not medical treatment. Surge increases movement without intentional strobe effects; pause if uncomfortable. No sound, tracking, or internet needed after saving this file. Allow screen breaks, and let your computer sleep when appropriate.</p>
   </div>
   <button class="minimize" id="restore-ui" aria-label="Show Light Room controls">Show controls</button>
 </div>
@@ -584,10 +595,10 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
     fieldFrame=0;
     var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;
     if(!allowed)return;
-    var minMs=speed==='drift'?155:speed==='vivid'?75:105;
+    var minMs=speed==='drift'?155:speed==='surge'?65:speed==='vivid'?75:105;
     if(!fieldLast||now-fieldLast>=minMs){
       var delta=fieldLast?Math.min((now-fieldLast)/1000,.2):.1;
-      fieldTime+=delta*(speed==='drift'?.54:speed==='vivid'?1.65:1);
+      fieldTime+=delta*(speed==='drift'?.54:speed==='surge'?3.05:speed==='vivid'?1.65:1);
       fieldLast=now;drawField();
     }
     if(window.requestAnimationFrame)fieldFrame=window.requestAnimationFrame(fieldTick);
@@ -604,7 +615,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
   }
   function mark(name,value){var buttons=document.querySelectorAll('[data-'+name+']');for(var i=0;i<buttons.length;i++)buttons[i].setAttribute('aria-pressed',buttons[i].getAttribute('data-'+name)===value?'true':'false');}
   function pickScene(value){if(['pyramid','halo','bloom','prism'].indexOf(value)<0)return;scene=value;var list=['pyramid','halo','bloom','prism'];for(var i=0;i<list.length;i++){var el=document.getElementById('scene-'+list[i]);el.setAttribute('class',list[i]===value?'scene active':'scene');}mark('scene',value);drawField();}
-  function pickColor(value){if(!colorSets[value])return;color=value;room.style.setProperty('--hue-a',colorSets[value][0]);room.style.setProperty('--hue-b',colorSets[value][1]);mark('color',value);drawField();}
+  function pickColor(value){if(!colorSets[value])return;color=value;room.style.setProperty('--hue-a',colorSets[value][0]);room.style.setProperty('--hue-b',colorSets[value][1]);room.classList.toggle('palette-spectrum',value==='spectrum');mark('color',value);drawField();}
   function pickPower(value){if(['soft','balanced','radiant'].indexOf(value)<0)return;room.classList.remove('power-soft','power-balanced','power-radiant');room.classList.add('power-'+value);power=value;mark('power',value);}
   function updateMotion(){var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;room.classList.toggle('moving',allowed);var btn=document.getElementById('motion');btn.setAttribute('aria-pressed',motion?'true':'false');btn.textContent=allowed?'Pause light flow':motion?'Motion unavailable · still':'Start light flow';syncField(allowed);}
   function quiet(on){room.classList.toggle('quiet-mode',!!on);if(on)document.getElementById('restore-ui').focus();else document.getElementById('hide-ui').focus();}
@@ -617,8 +628,8 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
   });
   var speedButtons=document.querySelectorAll('[data-speed]');
   for(var si=0;si<speedButtons.length;si++)speedButtons[si].addEventListener('click',function(){
-    var value=this.getAttribute('data-speed');if(['drift','flow','vivid'].indexOf(value)<0)return;
-    room.classList.remove('speed-drift','speed-flow','speed-vivid');room.classList.add('speed-'+value);
+    var value=this.getAttribute('data-speed');if(['drift','flow','vivid','surge'].indexOf(value)<0)return;
+    room.classList.remove('speed-drift','speed-flow','speed-vivid','speed-surge');room.classList.add('speed-'+value);
     speed=value;mark('speed',value);
   });
   room.classList.add('speed-flow');
