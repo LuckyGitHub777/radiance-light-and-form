@@ -27,7 +27,7 @@ function check(fullscreen,protocol){
   ['pattern',['linear','organic'],'linear'],
   ['speed',['flow','vivid','surge'],'surge']
  ];
- const ids=['motion','hide-ui','restore-ui','fullscreen','back-studio','offline-download',
+ const ids=['motion','hide-ui','restore-ui','fullscreen','offline-download',
  ...groups[0][1].map(v=>'scene-'+v),
  ...['pyramid-left','pyramid-right','halo','bloom','flower','cube-top','cube-left','cube-right','prism'].map(v=>'field-'+v)];
  ids.forEach(v=>make(v));
@@ -71,8 +71,8 @@ function check(fullscreen,protocol){
  doc.hidden=false;doc.dispatch('visibilitychange');assert.ok(room.classes.has('moving'));
  media.matches=true;media.change();assert.ok(!room.classes.has('moving')&&!frames.size);
  media.matches=false;media.change();assert.ok(room.classes.has('moving'));
- if(protocol==='file:'){assert.equal(els['back-studio'].hidden,true);assert.equal(els['offline-download'].hidden,true)}
- else {assert.equal(els['back-studio'].hidden,false);assert.equal(els['offline-download'].hidden,false)}
+ if(protocol==='file:')assert.equal(els['offline-download'].hidden,true);
+ else assert.equal(els['offline-download'].hidden,false);
  return {fullscreen,protocol,status:'PASS'};
 }
 console.log(JSON.stringify({smoke:[check(true,'https:'),check(false,'https:'),check(true,'file:')],externalDependencies:0}));
