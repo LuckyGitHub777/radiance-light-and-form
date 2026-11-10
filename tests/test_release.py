@@ -23,7 +23,6 @@ class ReleaseTest(unittest.TestCase):
             self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),digest,path)
         actual={p.relative_to(ROOT).as_posix() for p in ROOT.rglob('*') if p.is_file() and '.git' not in p.relative_to(ROOT).parts}
         actual.discard('MANIFEST.sha256')
-        actual.discard('.github/workflows/verify.yml')
         actual={p for p in actual if '__pycache__' not in p}
         self.assertEqual(actual,scanned)
 
@@ -221,6 +220,19 @@ class ReleaseTest(unittest.TestCase):
                             for i in range(total))
                 self.assertGreaterEqual(visible,minimum,
                     f'{total} rows cover [{low},{high}] at phase {phase}')
+
+
+    def test_public_first_impression_metadata(self):
+        html=(ROOT/'index.html').read_text(encoding='utf-8')
+        self.assertEqual(html.count('<h1>Stay in the Glow</h1>'),1)
+        self.assertIn('<meta name="viewport"',html)
+        self.assertIn('<meta name="description"',html)
+        self.assertIn('<meta property="og:title" content="Radiance — Light Room">',html)
+        self.assertIn('<meta property="og:description"',html)
+        self.assertIn('<link rel="canonical" href="https://luckygithub777.github.io/radiance-light-and-form/">',html)
+        self.assertNotIn('http-equiv="refresh"',html)
+        self.assertNotIn('studio.html',html.lower())
+        self.assertEqual(html,(ROOT/'light-room.html').read_text(encoding='utf-8'))
 
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
