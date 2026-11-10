@@ -86,7 +86,7 @@ class ReleaseTest(unittest.TestCase):
 
     def test_speed_and_geometry(self):
         html=(ROOT/'light-room.html').read_text(encoding='utf-8')
-        self.assertIn('data-speed="surge" aria-pressed="false"',html)
+        self.assertIn('data-speed="surge" aria-pressed="true"',html)
         self.assertIn("speed==='surge'?65",html)
         self.assertIn("speed==='surge'?3.05",html)
         self.assertIn('speed-surge.moving',html)
@@ -113,6 +113,44 @@ class ReleaseTest(unittest.TestCase):
         self.assertIn('data-color="spectrum"',html)
         self.assertIn('data-pattern="organic"',html)
         self.assertIn('document.addEventListener(\'visibilitychange\',updateMotion)',html)
+
+
+    def test_balanced_controls_and_immersive_restore(self):
+        html=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        self.assertEqual(html.count('class="dock-row"'),2)
+        self.assertIn('class="dock-actions"',html)
+        self.assertNotIn('class="dock-bottom"',html)
+        self.assertIn('>Segments</button>',html)
+        self.assertIn('>Waves</button>',html)
+        self.assertNotIn('data-speed="drift"',html)
+        self.assertIn('data-power="radiant" aria-pressed="true"',html)
+        self.assertIn('data-speed="surge" aria-pressed="true"',html)
+        self.assertIn("power='radiant'",html)
+        self.assertIn("speed='surge'",html)
+        self.assertIn('room.quiet-mode .minimize{display:block;opacity:0',html)
+        self.assertIn('room.addEventListener(\'pointermove\',revealQuiet)',html)
+        self.assertIn('restoreButton.addEventListener(\'focus\',revealQuiet)',html)
+        self.assertIn("window.setTimeout(hideQuietAffordance,1800)",html)
+        self.assertIn("if(e.key==='Escape'",html)
+
+    def test_precise_additional_geometry(self):
+        html=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        form=[re.search(r'data-scene="([^"]+)"',t).group(1)
+              for t in re.findall(r'<button[^>]*data-scene="[^"]+"[^>]*>',html)]
+        self.assertEqual(form,['pyramid','halo','bloom','flower','cube','prism'])
+        flower=html.split('<g class="scene" id="scene-flower">')[1].split('<g class="scene" id="scene-cube">')[0]
+        self.assertEqual(len(re.findall(r'<circle[^>]*r="81"',flower)),19)
+        centers=[]
+        for tag in re.findall(r'<circle[^>]*r="81"[^>]*>',flower):
+            centers.append((float(re.search(r'cx="([^"]+)"',tag).group(1)),
+                            float(re.search(r'cy="([^"]+)"',tag).group(1))))
+        self.assertEqual(len(set(centers)),19)
+        self.assertIn((360,270),centers)
+        self.assertAlmostEqual(min(math.dist(centers[0],p) for p in centers[1:]),81,places=2)
+        for field in ('field-flower','field-cube-top','field-cube-left','field-cube-right'):
+            self.assertIn('id="'+field+'"',html)
+        for clip in ('flower-field-area','cube-top-area','cube-left-area','cube-right-area'):
+            self.assertIn('id="'+clip+'"',html)
 
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
