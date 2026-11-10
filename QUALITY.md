@@ -1,7 +1,7 @@
 # Radiance — Release verification
 
 ## Experience contract
-The public root `/` enters `light-room.html`. The previous studio remains accessible at `studio.html`. The Light Room is a self-contained offline-capable HTML file, with no tracking or server-side runtime.
+The public root `/` serves the full Light Room directly: `index.html` and `light-room.html` are byte-identical, with no redirect or Studio landing page. The original Studio remains separately accessible at `studio.html`. The Light Room is a self-contained offline-capable HTML file, with no tracking or server-side runtime.
 
 ## Automated release gates
 1. Python tests: manifest and asset integrity, route/link validity, browser and HTTP CSP hashes, colors, controls, geometry, reduced motion and offline behavior.
