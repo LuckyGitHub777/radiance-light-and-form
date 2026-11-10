@@ -1,15 +1,26 @@
 # Radiance — Light and Form
 
-**Explore online:** [Open Radiance](https://luckygithub777.github.io/radiance-light-and-form/), or enter the [Light Room](https://luckygithub777.github.io/radiance-light-and-form/light-room.html) for a luminous, leave-on visual composition.
+**Open Radiance:** [Light Room](https://luckygithub777.github.io/radiance-light-and-form/) (the home URL enters [Light Room](https://luckygithub777.github.io/radiance-light-and-form/light-room.html) directly).
 
-Radiance is an interactive work of light and geometry. The main studio offers Halo, Bloom and Spiral forms, optional gentle movement, a short focus timer, and a transparent estimate calculator. The separate Light Room presents original Pyramid, Sphere, Seed of Life, Flower of Life, Cube and Prism compositions with six color palettes (including default multicolor Spectrum) and adjustable visual brightness.
+Radiance is an original browser-based visual environment of light, geometry and movement. The Light Room is the **primary experience**; the earlier focus/timer/estimation workspace remains available as [Studio](https://luckygithub777.github.io/radiance-light-and-form/studio.html), separately.
 
-**Offline Light Room:** Open the live Light Room and select **Save offline copy**. Transfer the saved single HTML file by USB and open it in a browser, even without internet. All visuals, controls and scripts are embedded in the file. The page makes no background network requests. **Continuous Light** flows by default when motion is permitted. **Spectrum** (default color) uses seven moving hues in the light field while preserving a coordinated two-color geometric outline; **Linear** (default pattern) uses structured, segmented horizontal light; choose **Waves** for the earlier curved flow. Choose **Flow / Vivid / Surge** to adjust pace, or **Pause light flow** to keep the composition still. Reduced-motion preferences turn animation off. Very old browsers and devices may render gradients differently.
+## Light Room
 
-**Light Room controls:** A centered, ready-to-use panel: select a form and palette, then Linear/Waves pattern, Flow/Vivid/Surge pace, and Soft/Warm/Radiant glow. Defaults are Spectrum, Linear, Surge, and Radiant. All three paces now move traveling light faster without intentional flashing. Pause, Hide controls, and Fullscreen are centered below the choices. Hidden controls disappear completely until pointer movement, touch, or keyboard focus reveals the restore affordance; Escape also restores controls. Keep the laptop cool, take screen breaks and let its display sleep when appropriate. No attempt is made to prevent operating-system screen sleep.
+- Six forms: Pyramid, Sphere, Seed of Life (seven equal circles), Flower of Life (19 equal circles), Cube, Prism.
+- Spectrum palette (seven vivid field hues) or five gentler palettes.
+- Linear segmented patterns or curved Waves; Flow, Vivid and Surge movement.
+- Soft, Warm or Radiant glow; Pause, Fullscreen and Hide Controls.
+- Defaults: Spectrum, Linear, Surge and Radiant. Pointer/touch reveals hidden controls; they fade automatically, and Escape restores them.
+- For offline use, select **Save offline copy** on the live Light Room. Its CSS, SVG and JavaScript are fully embedded. Offline copies conceal online-only links and redundant saving actions.
 
-The **Seed** form's seven equal-radius circles follow a mathematically precise **Seed of Life** construction: six centers form a regular hexagon around the seventh, with adjacent center spacing equal to circle radius. The **Flower** form uses 19 congruent circles on a hexagonal lattice, while **Cube** adds three geometric faces with independent light fields. **Surge** moves patterns faster without adding intentional strobe effects. Screen displays are not calibrated light-therapy devices; no medical benefits are asserted or guaranteed.
+## System
 
-Radiance is original visual art and ambient decoration, **not** a medical, therapeutic, financial, or scientific instrument. It makes no claim to reproduce or deliver the health effects attributed to commercial light-system hardware. Any values in the main studio's calculator are estimates, not measured earnings.
+Static HTML/CSS/SVG/JavaScript. No API, database, sign-in, telemetry, cookies, external scripts, or running backend. The `main` branch is the source of truth and `gh-pages` is the published release. `MANIFEST.sha256` records source integrity. CI verifies the source with Python and exercises interaction logic with dependency-free Node smoke tests. The site does not force the OS display to remain on.
 
-**Use and rights:** The source is publicly viewable without a redistribution or derivative-use license. [MANIFEST.sha256](MANIFEST.sha256) lists exact released source checksums.
+See [QUALITY.md](QUALITY.md) for V&V scope and remaining physical-screen tests.
+
+## Evidence boundary
+
+Radiance is visual artwork for personal ambience, reflection or relaxation; it is **not** a calibrated clinical light device. Visual resemblance to The Light System does not reproduce its proprietary hardware or establish its claimed physiological effects. Geometry follows explicit mathematical constructions, not demonstrated healing codes. Lower brightness, pause, stop or take breaks if uncomfortable.
+
+**Rights:** Source visibility is not a redistribution license.

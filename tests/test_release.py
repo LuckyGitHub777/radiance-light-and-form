@@ -45,7 +45,7 @@ class ReleaseTest(unittest.TestCase):
                 self.assertTrue((path.parent/link).is_file(),f'{path.name}: {link}')
 
     def test_inline_csp_hashes(self):
-        html=(ROOT/'index.html').read_text(encoding='utf-8')
+        html=(ROOT/'studio.html').read_text(encoding='utf-8')
         meta=re.search(r'<meta http-equiv="Content-Security-Policy"[^>]*>',html)
         self.assertIsNotNone(meta,'Missing browser CSP')
         headers=(ROOT/'_headers').read_text(encoding='utf-8')
@@ -68,6 +68,8 @@ class ReleaseTest(unittest.TestCase):
             digest=base64.b64encode(hashlib.sha256(blocks[0].encode('utf-8')).digest()).decode('ascii')
             self.assertIn(f"{directive} 'sha256-{digest}'",meta.group(0))
         self.assertIn('download="Radiance-Light-Room.html"',html)
+        self.assertIn('id="offline-download"',html)
+        self.assertIn("document.getElementById('offline-download').hidden=true",html)
         self.assertIn('prefers-reduced-motion:reduce',html)
 
 
@@ -167,6 +169,26 @@ class ReleaseTest(unittest.TestCase):
         self.assertIn('room.speed-surge.moving .flower-geometry{animation-duration:25s}',html)
         self.assertIn("speed='surge'",html)
         self.assertIn("power='radiant'",html)
+
+
+    def test_main_route_and_studio_preservation(self):
+        home=(ROOT/'index.html').read_text(encoding='utf-8')
+        studio=(ROOT/'studio.html').read_text(encoding='utf-8')
+        room=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        self.assertIn('http-equiv="refresh" content="0; url=./light-room.html"',home)
+        self.assertIn('href="./light-room.html"',home)
+        self.assertNotIn('<script>',home)
+        self.assertIn('<title>Radiance — Quiet Visual Workspace</title>',studio)
+        self.assertIn('id="back-studio" href="./studio.html"',room)
+        self.assertIn('href="./light-room.html"',studio)
+
+    def test_light_room_has_no_network_calls(self):
+        html=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        script=re.search(r'<script>(.*?)</script>',html,re.S).group(1)
+        for forbidden in ('fetch(', 'XMLHttpRequest', 'WebSocket(', 'sendBeacon(', 'serviceWorker.register'):
+            self.assertNotIn(forbidden,script)
+        self.assertIn('prefers-reduced-motion:reduce',html)
+        self.assertIn('visibilitychange',html)
 
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
