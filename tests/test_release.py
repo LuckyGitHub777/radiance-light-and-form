@@ -88,7 +88,7 @@ class ReleaseTest(unittest.TestCase):
         html=(ROOT/'light-room.html').read_text(encoding='utf-8')
         self.assertIn('data-speed="surge" aria-pressed="true"',html)
         self.assertIn("speed==='surge'?65",html)
-        self.assertIn("speed==='surge'?3.05",html)
+        self.assertIn("speed==='surge'?4.25",html)
         self.assertIn('speed-surge.moving',html)
         self.assertIn('prefers-reduced-motion:reduce',html)
         self.assertIn('syncField(allowed)',html)
@@ -120,7 +120,7 @@ class ReleaseTest(unittest.TestCase):
         self.assertEqual(html.count('class="dock-row"'),2)
         self.assertIn('class="dock-actions"',html)
         self.assertNotIn('class="dock-bottom"',html)
-        self.assertIn('>Segments</button>',html)
+        self.assertIn('>Linear</button>',html)
         self.assertIn('>Waves</button>',html)
         self.assertNotIn('data-speed="drift"',html)
         self.assertIn('data-power="radiant" aria-pressed="true"',html)
@@ -151,6 +151,22 @@ class ReleaseTest(unittest.TestCase):
             self.assertIn('id="'+field+'"',html)
         for clip in ('flower-field-area','cube-top-area','cube-left-area','cube-right-area'):
             self.assertIn('id="'+clip+'"',html)
+
+
+    def test_flow_hierarchy_and_pace_presets(self):
+        html=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        second=html.split('class="dock-row"')[2].split('class="dock-actions"')[0]
+        self.assertLess(second.index('>Pattern</span>'),second.index('>Pace</span>'))
+        self.assertLess(second.index('>Pace</span>'),second.index('>Glow</span>'))
+        self.assertIn('>Linear</button>',second)
+        self.assertIn('>Waves</button>',second)
+        self.assertIn("speed==='surge'?4.25:speed==='vivid'?2.4:1.45",html)
+        self.assertIn('surface-down 7s linear infinite',html)
+        self.assertIn('.room.speed-vivid.moving .stream-left .stream-tracks{animation-duration:4.3s}',html)
+        self.assertIn('.room.speed-surge.moving .stream-left .stream-tracks{animation-duration:2.6s}',html)
+        self.assertIn('room.speed-surge.moving .flower-geometry{animation-duration:25s}',html)
+        self.assertIn("speed='surge'",html)
+        self.assertIn("power='radiant'",html)
 
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
