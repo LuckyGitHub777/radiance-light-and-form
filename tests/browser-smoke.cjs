@@ -1,6 +1,8 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const html=fs.readFileSync(path.resolve(__dirname,'../light-room.html'),'utf8');
+const homepage=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8');
+assert.equal(homepage,html,'Shareable homepage must be the full Light Room, not a redirect');
 const match=html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(match,'Inline script required');
 class E {

@@ -1,6 +1,6 @@
 # Radiance — Light and Form
 
-**Open Radiance:** [Light Room](https://luckygithub777.github.io/radiance-light-and-form/) (the home URL enters [Light Room](https://luckygithub777.github.io/radiance-light-and-form/light-room.html) directly).
+**Open Radiance:** [Radiance — Light Room](https://luckygithub777.github.io/radiance-light-and-form/). The public homepage **is** the complete Light Room, not a redirect or the earlier Studio. The alternate [direct Light Room link](https://luckygithub777.github.io/radiance-light-and-form/light-room.html) remains supported.
 
 Radiance is an original browser-based visual environment of light, geometry and movement. The Light Room is the **primary experience**; the earlier focus/timer/estimation workspace remains available as [Studio](https://luckygithub777.github.io/radiance-light-and-form/studio.html), separately.
 
