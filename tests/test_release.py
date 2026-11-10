@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import json
+import math
 import re
 import unittest
 from pathlib import Path
@@ -82,6 +83,22 @@ class ReleaseTest(unittest.TestCase):
         self.assertIn("pattern==='linear'",html)
         self.assertIn('prefers-reduced-motion:reduce',html)
         self.assertIn('syncField(allowed)',html)
+
+    def test_speed_and_geometry(self):
+        html=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        self.assertIn('data-speed="surge" aria-pressed="false"',html)
+        self.assertIn("speed==='surge'?65",html)
+        self.assertIn("speed==='surge'?3.05",html)
+        self.assertIn('speed-surge.moving',html)
+        self.assertIn('prefers-reduced-motion:reduce',html)
+        self.assertIn('syncField(allowed)',html)
+        section=html.split('<g class="scene" id="scene-bloom">')[1].split('<g class="scene" id="scene-prism">')[0]
+        circles=re.findall(r'<circle[^>]+>',section)
+        seed=[tag for tag in circles if 'r="110"' in tag]
+        self.assertEqual(len(seed),7)
+        self.assertAlmostEqual(360-264.737,110*math.sqrt(3)/2,places=2)
+        self.assertAlmostEqual(455.263-360,110*math.sqrt(3)/2,places=2)
+        self.assertIn('title="Seed of Life',html)
 
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
