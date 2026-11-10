@@ -26,3 +26,7 @@ The runtime has no backend, database, third-party scripts, scheduled jobs or pac
 The current public website is published from the `gh-pages` branch. After a source change passes verification, production still requires publishing the two **identical** HTML files (`index.html` and `light-room.html`) plus `.nojekyll` to that branch and checking the resulting Pages deployment. Do not treat passing source CI as automatic publication. This existing branch publishing method is intentionally preserved until a separately verified migration to GitHub Actions publishing is authorized.
 
 The public URL could not be directly rendered or HTTP-crawled from the audit environment; deployment status and repository-file parity do not substitute for a physical browser test. GitHub branch protection is enabled on `main`, but the exact required checks and administrator-bypass settings could not be read with the present integration.
+
+## First paint and privacy
+
+The initial HTML color variables and classes match the selected Spectrum, Linear, Radiant and Surge controls before JavaScript starts. A browser-native no-referrer policy is declared in HTML independently of host response-header support. Public-source tests check the first paint, identical entry points, forbidden legacy navigation, and common credential/identifier patterns without adding external services.

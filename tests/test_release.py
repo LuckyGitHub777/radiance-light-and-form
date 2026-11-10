@@ -234,6 +234,22 @@ class ReleaseTest(unittest.TestCase):
         self.assertNotIn('studio.html',html.lower())
         self.assertEqual(html,(ROOT/'light-room.html').read_text(encoding='utf-8'))
 
+
+    def test_first_paint_and_public_privacy(self):
+        html=(ROOT/'index.html').read_text(encoding='utf-8')
+        self.assertIn('--hue-a:#f2bb63;--hue-b:#6ddafd;',html)
+        self.assertIn('class="room power-radiant palette-spectrum pattern-linear speed-surge"',html)
+        self.assertIn('var scene=\'pyramid\',color=\'spectrum\',power=\'radiant\',motion=true,speed=\'surge\',pattern=\'linear\'',html)
+        self.assertIn('<meta name="referrer" content="no-referrer">',html)
+        self.assertNotIn('<script src=',html)
+        self.assertNotIn('<link rel="stylesheet" href=',html)
+        self.assertEqual(html,(ROOT/'light-room.html').read_text(encoding='utf-8'))
+        for name in ('README.md','QUALITY.md','index.html','light-room.html'):
+            contents=(ROOT/name).read_text(encoding='utf-8')
+            self.assertNotRegex(contents,r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}')
+            self.assertNotRegex(contents,r'(?i)github_pat_[a-z0-9_]{30,}|ghp_[a-z0-9]{25,}|AKIA[0-9A-Z]{16}|-----BEGIN PRIVATE KEY-----')
+            self.assertNotIn('studio.html',contents.lower())
+
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
             with self.subTest(path=path.name):
