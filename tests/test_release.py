@@ -100,6 +100,20 @@ class ReleaseTest(unittest.TestCase):
         self.assertAlmostEqual(455.263-360,110*math.sqrt(3)/2,places=2)
         self.assertIn('title="Seed of Life',html)
 
+
+    def test_light_room_polished_release(self):
+        html=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        self.assertIn('<small>LIGHT ROOM</small>',html)
+        self.assertNotIn('SILENT BY DESIGN',html)
+        self.assertNotIn('ORIGINAL VISUAL ART',html)
+        self.assertIn('id="restore-ui"',html)
+        self.assertIn('fullBtn.disabled=true',html)
+        self.assertIn('Fullscreen unavailable',html)
+        self.assertIn('data-speed="surge"',html)
+        self.assertIn('data-color="spectrum"',html)
+        self.assertIn('data-pattern="organic"',html)
+        self.assertIn('document.addEventListener(\'visibilitychange\',updateMotion)',html)
+
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
             with self.subTest(path=path.name):
