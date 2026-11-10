@@ -101,11 +101,11 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 .light-stream .stripe-a{stroke:var(--hue-a)}
 .light-stream .stripe-b{stroke:var(--hue-b)}
 .room.moving .light-stream{opacity:.74}
-.room.moving .stream-left .stream-tracks{animation:surface-down 10s linear infinite}
-.room.moving .stream-right .stream-tracks{animation:surface-up 13s linear infinite}
-.room.moving .stream-prism .stream-tracks{animation:surface-down 9s linear infinite}
-.room.moving .halo-flow{animation:orbit-art 24s linear infinite;transform-origin:360px 270px}
-.room.moving .bloom-flow{animation:orbit-art-back 36s linear infinite;transform-origin:360px 270px}
+.room.moving .stream-left .stream-tracks{animation:surface-down 7s linear infinite}
+.room.moving .stream-right .stream-tracks{animation:surface-up 9.2s linear infinite}
+.room.moving .stream-prism .stream-tracks{animation:surface-down 6.4s linear infinite}
+.room.moving .halo-flow{animation:orbit-art 17s linear infinite;transform-origin:360px 270px}
+.room.moving .bloom-flow{animation:orbit-art-back 26s linear infinite;transform-origin:360px 270px}
 .halo-flow,.bloom-flow{opacity:.24}
 .room.moving .halo-flow,.room.moving .bloom-flow{opacity:.6}
 @keyframes surface-down{to{transform:translateY(56px)}}
@@ -118,11 +118,11 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 .room.speed-drift.moving .stream-prism .stream-tracks{animation-duration:18s}
 .room.speed-drift.moving .halo-flow{animation-duration:44s}
 .room.speed-drift.moving .bloom-flow{animation-duration:60s}
-.room.speed-vivid.moving .stream-left .stream-tracks{animation-duration:6s}
-.room.speed-vivid.moving .stream-right .stream-tracks{animation-duration:8s}
-.room.speed-vivid.moving .stream-prism .stream-tracks{animation-duration:6s}
-.room.speed-vivid.moving .halo-flow{animation-duration:17s}
-.room.speed-vivid.moving .bloom-flow{animation-duration:23s}
+.room.speed-vivid.moving .stream-left .stream-tracks{animation-duration:4.3s}
+.room.speed-vivid.moving .stream-right .stream-tracks{animation-duration:5.8s}
+.room.speed-vivid.moving .stream-prism .stream-tracks{animation-duration:4.3s}
+.room.speed-vivid.moving .halo-flow{animation-duration:12s}
+.room.speed-vivid.moving .bloom-flow{animation-duration:16s}
 @media(prefers-reduced-motion:reduce){.room.moving .stream-tracks,.room.moving .halo-flow,.room.moving .bloom-flow{animation:none!important}}
 /* Immersive environment: larger geometry with low-contrast peripheral light. */
 .ambient-curtain{display:none;position:absolute;inset:0 auto 0 0;width:31%;height:100%;z-index:1;pointer-events:none;opacity:.19;filter:blur(9px);-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 18%,#000 64%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 18%,#000 64%,transparent 100%);background:
@@ -164,11 +164,11 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 .room.pattern-linear:not(.moving) .light-stream{opacity:.12}
 
 /* Surge accelerates translation and orbital travel without strobe or color cuts. */
-.room.speed-surge.moving .stream-left .stream-tracks{animation-duration:3.4s}
-.room.speed-surge.moving .stream-right .stream-tracks{animation-duration:4.4s}
-.room.speed-surge.moving .stream-prism .stream-tracks{animation-duration:3.6s}
-.room.speed-surge.moving .halo-flow{animation-duration:10s}
-.room.speed-surge.moving .bloom-flow{animation-duration:13s}
+.room.speed-surge.moving .stream-left .stream-tracks{animation-duration:2.6s}
+.room.speed-surge.moving .stream-right .stream-tracks{animation-duration:3.3s}
+.room.speed-surge.moving .stream-prism .stream-tracks{animation-duration:2.7s}
+.room.speed-surge.moving .halo-flow{animation-duration:7.2s}
+.room.speed-surge.moving .bloom-flow{animation-duration:9.5s}
 .room.speed-surge.moving .slow-ring{animation-duration:38s}
 .room.speed-surge.moving .ambient-curtain{animation-duration:11s}
 /* Brighter chroma within the existing independent color and glow controls. */
@@ -190,8 +190,8 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 @media(prefers-reduced-motion:reduce){.room.quiet-mode .minimize{transition:none}}
 /* Geometry motion is calm and distinct from the moving spectral details. */
 .flower-geometry{transform-origin:360px 270px}
-.room.moving .flower-geometry{animation:orbit-art 70s linear infinite}
-.room.speed-surge.moving .flower-geometry{animation-duration:36s}
+.room.moving .flower-geometry{animation:orbit-art 50s linear infinite}
+.room.speed-surge.moving .flower-geometry{animation-duration:25s}
 </style>
 </head>
 <body>
@@ -569,9 +569,9 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
         <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="spectrum" aria-pressed="true">Spectrum</button><button class="choice" data-color="aurum" aria-pressed="false">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
       </div>
       <div class="dock-row">
-        <div class="group" role="group" aria-label="Choose light pattern"><span class="group-label">Pattern</span><button class="choice" data-pattern="linear" aria-pressed="true" title="Segmented, structured light">Segments</button><button class="choice" data-pattern="organic" aria-pressed="false" title="Continuous curved light">Waves</button></div>
-        <div class="group" role="group" aria-label="Choose light glow"><span class="group-label">Glow</span><button class="choice" data-power="soft" aria-pressed="false">Soft</button><button class="choice" data-power="balanced" aria-pressed="false">Warm</button><button class="choice" data-power="radiant" aria-pressed="true">Radiant</button></div>
+        <div class="group" role="group" aria-label="Choose light pattern"><span class="group-label">Pattern</span><button class="choice" data-pattern="linear" aria-pressed="true" title="Structured horizontal light patterns">Linear</button><button class="choice" data-pattern="organic" aria-pressed="false" title="Continuous curved light">Waves</button></div>
         <div class="group" role="group" aria-label="Choose movement pace"><span class="group-label">Pace</span><button class="choice" data-speed="flow" aria-pressed="false">Flow</button><button class="choice" data-speed="vivid" aria-pressed="false">Vivid</button><button class="choice" data-speed="surge" aria-pressed="true">Surge</button></div>
+        <div class="group" role="group" aria-label="Choose light glow"><span class="group-label">Glow</span><button class="choice" data-power="soft" aria-pressed="false">Soft</button><button class="choice" data-power="balanced" aria-pressed="false">Warm</button><button class="choice" data-power="radiant" aria-pressed="true">Radiant</button></div>
       </div>
       <div class="dock-actions" aria-label="Viewing controls">
         <button class="command" id="motion" aria-pressed="true">Pause</button>
@@ -663,7 +663,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
     var minMs=speed==='drift'?155:speed==='surge'?65:speed==='vivid'?75:105;
     if(!fieldLast||now-fieldLast>=minMs){
       var delta=fieldLast?Math.min((now-fieldLast)/1000,.2):.1;
-      fieldTime+=delta*(speed==='drift'?.54:speed==='surge'?3.05:speed==='vivid'?1.65:1);
+      fieldTime+=delta*(speed==='drift'?.54:speed==='surge'?4.25:speed==='vivid'?2.4:1.45);
       fieldLast=now;drawField();
     }
     if(window.requestAnimationFrame)fieldFrame=window.requestAnimationFrame(fieldTick);
