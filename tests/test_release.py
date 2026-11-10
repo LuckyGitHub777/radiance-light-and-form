@@ -172,14 +172,16 @@ class ReleaseTest(unittest.TestCase):
 
 
     def test_main_route_and_studio_preservation(self):
-        home=(ROOT/'index.html').read_text(encoding='utf-8')
+        home=(ROOT/'index.html').read_bytes()
+        room=(ROOT/'light-room.html').read_bytes()
         studio=(ROOT/'studio.html').read_text(encoding='utf-8')
-        room=(ROOT/'light-room.html').read_text(encoding='utf-8')
-        self.assertIn('http-equiv="refresh" content="0; url=./light-room.html"',home)
-        self.assertIn('href="./light-room.html"',home)
-        self.assertNotIn('<script>',home)
+        self.assertEqual(home,room,'Homepage must be the full Light Room, not a redirect')
+        text=home.decode('utf-8')
+        self.assertIn('<title>Radiance — Light Room</title>',text)
+        self.assertNotIn('http-equiv="refresh"',text)
+        self.assertIn('<meta property="og:title" content="Radiance — Light Room">',text)
+        self.assertIn('id="back-studio" href="./studio.html"',text)
         self.assertIn('<title>Radiance — Quiet Visual Workspace</title>',studio)
-        self.assertIn('id="back-studio" href="./studio.html"',room)
         self.assertIn('href="./light-room.html"',studio)
 
     def test_light_room_has_no_network_calls(self):
