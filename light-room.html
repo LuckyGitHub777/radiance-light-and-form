@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="description" content="Radiance Light Room: original ambient luminous geometry for a quiet, private, offline visual experience.">
 <title>Radiance — Light Room</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-e8EOGmPDh6sX0eRk3bWgF8Ue+3BenXWOpvBXMf4XOT0='; script-src 'sha256-A2iM3+LKcYy/WzxCHIEhqJQItMzQL72Bizbi+/DYh+s='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-e8EOGmPDh6sX0eRk3bWgF8Ue+3BenXWOpvBXMf4XOT0='; script-src 'sha256-/6w6W+LvCFVHtlDJLLU6wYgJL2i7h1ske2Lj/EYMJb4='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <style>
 :root{--hue-a:#f2cd91;--hue-b:#84d6d2;--hue-c:#d5a76b;--vignette:#070b13;--text:#f4f0e8;--muted:#b6c2cb}
 *{box-sizing:border-box}
@@ -200,7 +200,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
   <div class="shell">
     <header class="top">
       <div class="brand"><span class="monogram" aria-hidden="true">✧</span><span><strong>RADIANCE</strong><small>LIGHT ROOM</small></span></div>
-      <div class="top-actions"><a class="link" href="./light-room.html" download="Radiance-Light-Room.html">Save offline copy</a><a class="link" id="back-studio" href="./index.html">Back to studio</a></div>
+      <div class="top-actions"><a class="link" id="offline-download" href="./light-room.html" download="Radiance-Light-Room.html">Save offline copy</a><a class="link" id="back-studio" href="./studio.html">Studio</a></div>
     </header>
     <section class="copy" aria-label="Light Room introduction">
       <h1>Stay in the glow.</h1>
@@ -740,7 +740,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
   document.addEventListener('visibilitychange',updateMotion);
   if(reduce){if(reduce.addEventListener)reduce.addEventListener('change',updateMotion);else if(reduce.addListener)reduce.addListener(updateMotion);}
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&room.classList.contains('quiet-mode'))quiet(false);});
-  if(window.location.protocol==='file:')document.getElementById('back-studio').hidden=true;
+  if(window.location.protocol==='file:'){document.getElementById('back-studio').hidden=true;document.getElementById('offline-download').hidden=true;}
   pickScene(scene);pickColor(color);pickPower(power);updateMotion();
 })();
 </script>
