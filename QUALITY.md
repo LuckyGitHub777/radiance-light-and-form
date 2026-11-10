@@ -8,6 +8,7 @@ The homepage and direct Light Room are identical self-contained HTML application
 
 - SHA-256 source manifest and exact Content Security Policy hashes
 - Six geometric forms, six palettes, pattern/pace/glow controls
+- All-form linear continuity: equal full-cycle row spacing, persistent low-intensity carrier lines, sampled coverage checks across motion phases
 - Pause/Resume, fullscreen, hidden controls, keyboard restoration and motion preferences
 - Hidden-tab pausing and offline single-file operation
 - Passing source CI, identical homepage/Light Room and GitHub Pages deployment

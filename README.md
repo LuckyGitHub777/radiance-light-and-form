@@ -13,7 +13,7 @@ Radiance is an original self-contained visual experience of luminous color, geom
 - Glow: Soft, Warm, Radiant
 - Controls: Pause, Hide Controls, Fullscreen
 
-Defaults are Spectrum, Linear, Surge and Radiant. The application is static HTML, CSS, SVG and JavaScript; there are no external scripts, analytics, trackers, APIs or running backend. Use **Save offline copy** to keep the entire application in one HTML file.
+Defaults are Spectrum, Linear, Surge and Radiant. Linear uses evenly spaced, continuously wrapping procedural rows and a subtle, persistent color carrier behind moving segments to avoid intermittent dark fields across all six forms. These patterns encode no therapeutic frequency or medical treatment. The application is static HTML, CSS, SVG and JavaScript; there are no external scripts, analytics, trackers, APIs or running backend. Use **Save offline copy** to keep the entire application in one HTML file.
 
 ## Verification and limits
 
