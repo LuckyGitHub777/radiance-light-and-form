@@ -173,6 +173,25 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 .room.speed-surge.moving .ambient-curtain{animation-duration:11s}
 /* Brighter chroma within the existing independent color and glow controls. */
 .room.palette-spectrum .living-field{filter:saturate(1.18)}
+
+/* Unified, centered controls. Groups wrap as units instead of orphaning buttons. */
+.dock{max-width:1100px;padding:14px 17px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;flex-wrap:nowrap;gap:11px}
+.dock-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;column-gap:26px;row-gap:12px;width:100%}
+.dock .group{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:6px}
+.dock .group-label{white-space:nowrap;width:auto;text-align:left;margin:0 6px 0 0}
+.dock .choice{min-height:34px;padding:7px 10px;font-size:11px;white-space:nowrap}
+.dock .command{min-height:35px;padding:8px 16px;font-size:11px}
+.dock-actions{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:9px;width:100%;border-top:1px solid #a0c2cf17;padding-top:10px}
+@media(max-width:850px){.dock-row{column-gap:16px}.dock .group{flex-wrap:wrap}}
+@media(max-width:520px){.dock{padding:12px 9px;gap:13px}.dock-row{gap:13px}.dock .group{width:100%;gap:5px}.dock .group-label{width:100%;text-align:center;margin:0 0 2px}.dock .choice{padding:7px 9px}.dock .command{padding:7px 11px}}
+/* The immersive restore affordance is genuinely hidden until interaction. */
+.room.quiet-mode .minimize{display:block;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .32s ease,transform .32s ease}
+.room.quiet-mode.ui-awake .minimize,.room.quiet-mode .minimize:focus-visible,.room.quiet-mode .minimize:hover{opacity:.86;transform:translateY(0);pointer-events:auto}
+@media(prefers-reduced-motion:reduce){.room.quiet-mode .minimize{transition:none}}
+/* Geometry motion is calm and distinct from the moving spectral details. */
+.flower-geometry{transform-origin:360px 270px}
+.room.moving .flower-geometry{animation:orbit-art 70s linear infinite}
+.room.speed-surge.moving .flower-geometry{animation-duration:36s}
 </style>
 </head>
 <body>
@@ -200,6 +219,10 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <clipPath id="prism-area"><path d="M360 74 L166 387 L360 450 L554 387 Z"/></clipPath>
           <clipPath id="halo-field-area"><circle cx="360" cy="270" r="193"/></clipPath>
           <clipPath id="bloom-field-area"><circle cx="360" cy="270" r="214"/></clipPath>
+          <clipPath id="flower-field-area"><circle cx="360" cy="270" r="236"/></clipPath>
+          <clipPath id="cube-top-area"><polygon points="360,132 208,221 360,310 512,221"/></clipPath>
+          <clipPath id="cube-left-area"><polygon points="208,221 360,310 360,470 208,381"/></clipPath>
+          <clipPath id="cube-right-area"><polygon points="360,310 512,221 512,381 360,470"/></clipPath>
         </defs>
         <circle cx="360" cy="268" r="246" fill="url(#mist)" />
         <g class="slow-ring" aria-hidden="true">
@@ -412,6 +435,45 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
           <circle class="outline secondary fine" cx="360" cy="270" r="210"/>
           <circle class="beacon" cx="360" cy="270" r="5"/>
         </g>
+
+        <g class="scene" id="scene-flower">
+          <g class="living-field" id="field-flower" clip-path="url(#flower-field-area)" aria-hidden="true"></g>
+          <g class="flower-geometry">
+            <circle class="outline" cx="198" cy="270" r="81"/>
+            <circle class="outline" cx="238.500" cy="340.148" r="81"/>
+            <circle class="outline" cx="279" cy="410.296" r="81"/>
+            <circle class="outline" cx="238.500" cy="199.852" r="81"/>
+            <circle class="outline" cx="279" cy="270" r="81"/>
+            <circle class="outline" cx="319.500" cy="340.148" r="81"/>
+            <circle class="outline" cx="360" cy="410.296" r="81"/>
+            <circle class="outline" cx="279" cy="129.704" r="81"/>
+            <circle class="outline" cx="319.500" cy="199.852" r="81"/>
+            <circle class="outline secondary" cx="360" cy="270" r="81"/>
+            <circle class="outline" cx="400.500" cy="340.148" r="81"/>
+            <circle class="outline" cx="441" cy="410.296" r="81"/>
+            <circle class="outline" cx="360" cy="129.704" r="81"/>
+            <circle class="outline" cx="400.500" cy="199.852" r="81"/>
+            <circle class="outline" cx="441" cy="270" r="81"/>
+            <circle class="outline" cx="481.500" cy="340.148" r="81"/>
+            <circle class="outline" cx="441" cy="129.704" r="81"/>
+            <circle class="outline" cx="481.500" cy="199.852" r="81"/>
+            <circle class="outline" cx="522" cy="270" r="81"/>
+          </g>
+          <circle class="outline secondary fine" cx="360" cy="270" r="226"/>
+          <circle class="beacon" cx="360" cy="270" r="4"/>
+        </g>
+
+        <g class="scene" id="scene-cube">
+          <g class="living-field" id="field-cube-top" clip-path="url(#cube-top-area)" aria-hidden="true"></g>
+          <g class="living-field" id="field-cube-left" clip-path="url(#cube-left-area)" aria-hidden="true"></g>
+          <g class="living-field" id="field-cube-right" clip-path="url(#cube-right-area)" aria-hidden="true"></g>
+          <polygon class="fill-a" points="360,132 208,221 360,310 512,221"/>
+          <polygon class="fill-b" points="208,221 360,310 360,470 208,381"/>
+          <polygon class="fill-b" points="360,310 512,221 512,381 360,470"/>
+          <path class="outline" d="M360 132 L512 221 V381 L360 470 L208 381 V221 Z M360 132 L208 221 L360 310 L512 221 M360 310 V470"/>
+          <path class="secondary fine" fill="none" d="M360 174 L248 240 L360 306 L472 240 Z M248 240 V358 L360 424 L472 358 V240"/>
+          <circle class="beacon" cx="360" cy="132" r="4"/>
+        </g>
         <g class="scene" id="scene-prism">
           <g class="living-field" id="field-prism" clip-path="url(#prism-area)" aria-hidden="true"></g>
           <g class="light-stream stream-prism" clip-path="url(#prism-area)" aria-hidden="true">
@@ -502,29 +564,35 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
       </svg>
     </main>
     <div class="dock" id="dock" aria-label="Light Room controls">
-      <div class="group" role="group" aria-label="Choose light geometry"><span class="group-label">Form</span><button class="choice" data-scene="pyramid" aria-pressed="true">Pyramid</button><button class="choice" data-scene="halo" aria-pressed="false">Halo</button><button class="choice" data-scene="bloom" aria-pressed="false" aria-label="Bloom — Seed of Life geometry, seven equal circles" title="Seed of Life · seven congruent circles">Bloom</button><button class="choice" data-scene="prism" aria-pressed="false">Prism</button></div>
-      <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="spectrum" aria-pressed="true">Spectrum</button><button class="choice" data-color="aurum" aria-pressed="false">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
-      <div class="dock-bottom">
-        <div class="group" role="group" aria-label="Choose light pattern"><span class="group-label">Pattern</span><button class="choice" data-pattern="linear" aria-pressed="true">Linear</button><button class="choice" data-pattern="organic" aria-pressed="false">Organic</button></div>
-        <div class="group" role="group" aria-label="Light intensity"><span class="group-label">Glow</span><button class="choice" data-power="soft" aria-pressed="false">Soft</button><button class="choice" data-power="balanced" aria-pressed="true">Warm</button><button class="choice" data-power="radiant" aria-pressed="false">Radiant</button></div>
-        <div class="group" role="group" aria-label="Light movement speed"><span class="group-label">Flow pace</span><button class="choice" data-speed="drift" aria-pressed="false">Drift</button><button class="choice" data-speed="flow" aria-pressed="true">Flow</button><button class="choice" data-speed="vivid" aria-pressed="false">Vivid</button><button class="choice" data-speed="surge" aria-pressed="false" title="Fast traveling patterns without intentional flashing">Surge</button></div>
-        <div class="group"><button class="command" id="motion" aria-pressed="true">Pause light flow</button><button class="command" id="hide-ui">Hide controls</button><button class="command primary" id="fullscreen">Fullscreen</button></div>
+      <div class="dock-row">
+        <div class="group" role="group" aria-label="Choose geometric form"><span class="group-label">Form</span><button class="choice" data-scene="pyramid" aria-pressed="true">Pyramid</button><button class="choice" data-scene="halo" aria-pressed="false" title="Spherical orbital geometry">Sphere</button><button class="choice" data-scene="bloom" aria-pressed="false" title="Seed of Life · seven equal circles">Seed</button><button class="choice" data-scene="flower" aria-pressed="false" title="Flower of Life · nineteen equal circles">Flower</button><button class="choice" data-scene="cube" aria-pressed="false" title="Isometric cube">Cube</button><button class="choice" data-scene="prism" aria-pressed="false">Prism</button></div>
+        <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="spectrum" aria-pressed="true">Spectrum</button><button class="choice" data-color="aurum" aria-pressed="false">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
+      </div>
+      <div class="dock-row">
+        <div class="group" role="group" aria-label="Choose light pattern"><span class="group-label">Pattern</span><button class="choice" data-pattern="linear" aria-pressed="true" title="Segmented, structured light">Segments</button><button class="choice" data-pattern="organic" aria-pressed="false" title="Continuous curved light">Waves</button></div>
+        <div class="group" role="group" aria-label="Choose light glow"><span class="group-label">Glow</span><button class="choice" data-power="soft" aria-pressed="false">Soft</button><button class="choice" data-power="balanced" aria-pressed="false">Warm</button><button class="choice" data-power="radiant" aria-pressed="true">Radiant</button></div>
+        <div class="group" role="group" aria-label="Choose movement pace"><span class="group-label">Pace</span><button class="choice" data-speed="flow" aria-pressed="false">Flow</button><button class="choice" data-speed="vivid" aria-pressed="false">Vivid</button><button class="choice" data-speed="surge" aria-pressed="true">Surge</button></div>
+      </div>
+      <div class="dock-actions" aria-label="Viewing controls">
+        <button class="command" id="motion" aria-pressed="true">Pause</button>
+        <button class="command" id="hide-ui" title="Move the pointer or press Escape to show controls again">Hide controls</button>
+        <button class="command primary" id="fullscreen">Fullscreen</button>
       </div>
     </div>
-    <p class="help" id="help">Choose comfortable brightness. Pause whenever you like, and take screen breaks.</p>
+    <p class="help" id="help" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap">Choose a comfortable glow, pause as needed, and take screen breaks. Press Escape or move your pointer to restore hidden controls.</p>
   </div>
-  <button class="minimize" id="restore-ui" aria-label="Show Light Room controls">Show controls</button>
+  <button class="minimize" id="restore-ui" aria-label="Show Light Room controls" title="Show controls (or press Escape)">Show controls</button>
 </div>
 <script>
 (function(){'use strict';
   var room=document.getElementById('room');
   var colorSets={spectrum:['#f2bb63','#6ddafd'],aurum:['#f2cd91','#84d6d2'],aurora:['#9eeac3','#91cee5'],ocean:['#9ecbfa','#7fdfe6'],violet:['#cfb8f7','#9dcae7'],rose:['#f0b6ca','#e5c18f']};
-  var scene='pyramid',color='spectrum',power='balanced',motion=true,speed='flow',pattern='linear';
+  var scene='pyramid',color='spectrum',power='radiant',motion=true,speed='surge',pattern='linear';
   var reduce=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
 
   /* Local procedural light. Paths evolve independently inside each geometry,
      are throttled for low-power devices, and stop for Pause/reduced motion/hidden tabs. */
-  var fieldGroups={'pyramid':['pyramid-left','pyramid-right'],halo:['halo'],bloom:['bloom'],prism:['prism']};
+  var fieldGroups={'pyramid':['pyramid-left','pyramid-right'],halo:['halo'],bloom:['bloom'],flower:['flower'],cube:['cube-top','cube-left','cube-right'],prism:['prism']};
   var fieldColors={
     spectrum:['#23dcff','#567aff','#cd56fa','#ff4fa6','#fec157','#43e5a5','#ff745d'],
     aurum:['#f2cd91','#84d6d2','#aab8f7','#e9adcf','#b5e9e2'],
@@ -536,11 +604,12 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
   var fieldPaths={},fieldReady=false,fieldFrame=0,fieldLast=0,fieldTime=0;
   function initField(){
     if(fieldReady)return;
-    var names=['pyramid-left','pyramid-right','halo','bloom','prism'];
+    var names=['pyramid-left','pyramid-right','halo','bloom','flower','cube-top','cube-left','cube-right','prism'];
     for(var k=0;k<names.length;k++){
       var root=document.getElementById('field-'+names[k]);fieldPaths[names[k]]=[];
       if(!root)continue;
-      for(var i=0;i<52;i++){
+      var count=names[k]==='flower'?40:names[k].indexOf('cube-')===0?30:52;
+      for(var i=0;i<count;i++){
         var p=document.createElementNS('http://www.w3.org/2000/svg','path');
         p.setAttribute('fill','none');p.setAttribute('stroke-linecap','round');
         p.setAttribute('stroke-width',String(1.15+(i%5)*0.38));
@@ -610,11 +679,38 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
     }
   }
   function mark(name,value){var buttons=document.querySelectorAll('[data-'+name+']');for(var i=0;i<buttons.length;i++)buttons[i].setAttribute('aria-pressed',buttons[i].getAttribute('data-'+name)===value?'true':'false');}
-  function pickScene(value){if(['pyramid','halo','bloom','prism'].indexOf(value)<0)return;scene=value;var list=['pyramid','halo','bloom','prism'];for(var i=0;i<list.length;i++){var el=document.getElementById('scene-'+list[i]);el.setAttribute('class',list[i]===value?'scene active':'scene');}mark('scene',value);drawField();}
+  function pickScene(value){if(['pyramid','halo','bloom','flower','cube','prism'].indexOf(value)<0)return;scene=value;var list=['pyramid','halo','bloom','flower','cube','prism'];for(var i=0;i<list.length;i++){var el=document.getElementById('scene-'+list[i]);el.setAttribute('class',list[i]===value?'scene active':'scene');}mark('scene',value);drawField();}
   function pickColor(value){if(!colorSets[value])return;color=value;room.style.setProperty('--hue-a',colorSets[value][0]);room.style.setProperty('--hue-b',colorSets[value][1]);room.classList.toggle('palette-spectrum',value==='spectrum');mark('color',value);drawField();}
   function pickPower(value){if(['soft','balanced','radiant'].indexOf(value)<0)return;room.classList.remove('power-soft','power-balanced','power-radiant');room.classList.add('power-'+value);power=value;mark('power',value);}
-  function updateMotion(){var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;room.classList.toggle('moving',allowed);var btn=document.getElementById('motion');btn.setAttribute('aria-pressed',motion?'true':'false');btn.textContent=allowed?'Pause light flow':motion?'Motion unavailable · still':'Start light flow';syncField(allowed);}
-  function quiet(on){room.classList.toggle('quiet-mode',!!on);if(on)document.getElementById('restore-ui').focus();else document.getElementById('hide-ui').focus();}
+  function updateMotion(){var allowed=motion&&!(reduce&&reduce.matches)&&!document.hidden;room.classList.toggle('moving',allowed);var btn=document.getElementById('motion');btn.setAttribute('aria-pressed',motion?'true':'false');btn.textContent=allowed?'Pause':motion?'Motion paused':'Resume';syncField(allowed);}
+  var restoreButton=document.getElementById('restore-ui'),quietTimer=0,restoreHovered=false;
+  function hideQuietAffordance(){
+    if(!room.classList.contains('quiet-mode'))return;
+    if(restoreHovered||document.activeElement===restoreButton){scheduleQuietFade();return;}
+    room.classList.remove('ui-awake');
+  }
+  function scheduleQuietFade(){
+    if(quietTimer)window.clearTimeout(quietTimer);
+    quietTimer=window.setTimeout(hideQuietAffordance,1800);
+  }
+  function revealQuiet(){
+    if(!room.classList.contains('quiet-mode'))return;
+    room.classList.add('ui-awake');
+    scheduleQuietFade();
+  }
+  function quiet(on){
+    room.classList.toggle('quiet-mode',!!on);
+    room.classList.remove('ui-awake');
+    if(quietTimer)window.clearTimeout(quietTimer);
+    quietTimer=0;
+    if(!on)document.getElementById('hide-ui').focus();
+  }
+  room.addEventListener('pointermove',revealQuiet);
+  room.addEventListener('touchstart',revealQuiet,{passive:true});
+  restoreButton.addEventListener('pointerenter',function(){restoreHovered=true;revealQuiet();});
+  restoreButton.addEventListener('pointerleave',function(){restoreHovered=false;scheduleQuietFade();});
+  restoreButton.addEventListener('focus',revealQuiet);
+  restoreButton.addEventListener('blur',scheduleQuietFade);
   room.classList.add('pattern-linear');
   var patternButtons=document.querySelectorAll('[data-pattern]');
   for(var pi=0;pi<patternButtons.length;pi++)patternButtons[pi].addEventListener('click',function(){
@@ -628,7 +724,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
     room.classList.remove('speed-drift','speed-flow','speed-vivid','speed-surge');room.classList.add('speed-'+value);
     speed=value;mark('speed',value);
   });
-  room.classList.add('speed-flow');
+  room.classList.add('speed-surge');
   var btns=document.querySelectorAll('[data-scene],[data-color],[data-power]');for(var i=0;i<btns.length;i++)btns[i].addEventListener('click',function(){var a=this.getAttribute('data-scene'),b=this.getAttribute('data-color'),c=this.getAttribute('data-power');if(a)pickScene(a);if(b)pickColor(b);if(c)pickPower(c);});
   document.getElementById('motion').addEventListener('click',function(){motion=!motion;updateMotion();});
   document.getElementById('hide-ui').addEventListener('click',function(){quiet(true);});
