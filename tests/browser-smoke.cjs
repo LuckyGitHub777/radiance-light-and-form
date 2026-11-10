@@ -51,8 +51,33 @@ function check(fullscreen,protocol){
  vm.runInNewContext(match[1],{document:doc,window:win},{timeout:5000,filename:'radiance-inline.js'});
  const choose=(k,v)=>{const b=btns.find(e=>e.getAttribute('data-'+k)===v);assert.ok(b);b.click();assert.equal(b.getAttribute('aria-pressed'),'true')};
  assert.ok(room.classes.has('moving')&&room.classes.has('speed-surge')&&room.classes.has('power-radiant'));
- assert.equal(els['field-flower'].children.length,40);
- for(const face of ['top','left','right'])assert.equal(els['field-cube-'+face].children.length,30);
+ assert.equal(els['field-flower'].children.length,43);
+ for(const face of ['top','left','right'])assert.equal(els['field-cube-'+face].children.length,33);
+
+ // The field has continuous vertical coverage at every phase, even on smaller forms.
+ const bounds={
+  'pyramid-left':[74,423,20],'pyramid-right':[74,423,20],
+  'halo':[77,463,23],'bloom':[56,484,22],'flower':[34,506,23],
+  'cube-top':[132,310,6],'cube-left':[221,470,8],
+  'cube-right':[221,470,8],'prism':[74,450,20]
+ };
+ for(const [name,[low,high,minimum]] of Object.entries(bounds)){
+  const children=els['field-'+name].children;
+  assert.equal(children[0].getAttribute('class'),'light-carrier',name+' persistent carrier');
+  assert.equal(children[1].getAttribute('class'),'light-carrier');
+  assert.equal(children[2].getAttribute('class'),'light-carrier');
+  const count=children.length-3;
+  const spacing=690/count;
+  assert.ok(count>0);
+  for(let phase=0;phase<690;phase+=2.5){
+    let active=0;
+    for(let i=0;i<count;i++){
+      const y=((i*spacing+phase)%690)-92;
+      if(y>=low&&y<=high)active++;
+    }
+    assert.ok(active>=minimum,name+' continuous rows at phase '+phase);
+  }
+ }
  for(const name of groups[0][1]){choose('scene',name);assert.equal(els['scene-'+name].getAttribute('class'),'scene active')}
  choose('pattern','organic');assert.ok(room.classes.has('pattern-organic'));choose('pattern','linear');
  choose('color','violet');assert.equal(room.css['--hue-a'],'#cfb8f7');choose('color','spectrum');

@@ -202,6 +202,26 @@ class ReleaseTest(unittest.TestCase):
         self.assertIn('prefers-reduced-motion:reduce',html)
         self.assertIn('visibilitychange',html)
 
+
+    def test_continuous_linear_signal_for_every_form(self):
+        html=(ROOT/'light-room.html').read_text(encoding='utf-8')
+        self.assertIn('var spacing=690/paths.length;',html)
+        self.assertIn('var fieldPaths={},fieldCarriers={}',html)
+        self.assertIn('for(var band=0;band<3;band++)',html)
+        self.assertIn('for(var q=0;q<34;q++)',html)
+        self.assertIn(".room.pattern-linear .light-carrier",html)
+        self.assertIn(".room.pattern-organic .light-carrier{opacity:0}",html)
+        self.assertNotIn('var offset=i*13.2+',html)
+        for total,low,high,minimum in [
+            (52,74,423,20),(52,77,463,23),(52,56,484,22),
+            (40,34,506,23),(30,132,310,6),(30,221,470,8)]:
+            spacing=690/total
+            for phase in range(0,690,5):
+                visible=sum(low<=((i*spacing+phase)%690)-92<=high
+                            for i in range(total))
+                self.assertGreaterEqual(visible,minimum,
+                    f'{total} rows cover [{low},{high}] at phase {phase}')
+
     def test_json_formats(self):
         for path in ROOT.rglob('*.json'):
             with self.subTest(path=path.name):
