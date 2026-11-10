@@ -13,7 +13,7 @@
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://luckygithub777.github.io/radiance-light-and-form/">
 <title>Radiance — Light Room</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-VLPF88fRmnqrjbXuC2lbHZZJqvHDdJ+aS6rZUFSnO4g='; script-src 'sha256-AppZOMcJKCBrB67rfrEkrCyEU94mHe0dz98kGhFQFnA='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-VLPF88fRmnqrjbXuC2lbHZZJqvHDdJ+aS6rZUFSnO4g='; script-src 'sha256-mWfeG5Mi1tlseoIEzASwAmHw/d8RW8OWTKAlh/pq2kE='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <style>
 :root{--hue-a:#f2bb63;--hue-b:#6ddafd;--hue-c:#d5a76b;--vignette:#070b13;--text:#f4f0e8;--muted:#b6c2cb}
 *{box-sizing:border-box}
@@ -571,7 +571,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
     <div class="dock" id="dock" aria-label="Light Room controls">
       <div class="dock-row">
         <div class="group" role="group" aria-label="Choose geometric form"><span class="group-label">Form</span><button class="choice" data-scene="pyramid" aria-pressed="true">Pyramid</button><button class="choice" data-scene="halo" aria-pressed="false" title="Spherical orbital geometry">Sphere</button><button class="choice" data-scene="bloom" aria-pressed="false" title="Seed of Life · seven equal circles">Seed</button><button class="choice" data-scene="flower" aria-pressed="false" title="Flower of Life · nineteen equal circles">Flower</button><button class="choice" data-scene="cube" aria-pressed="false" title="Isometric cube">Cube</button><button class="choice" data-scene="prism" aria-pressed="false">Prism</button></div>
-        <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="spectrum" aria-pressed="true">Spectrum</button><button class="choice" data-color="aurum" aria-pressed="false">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
+        <div class="group" role="group" aria-label="Choose light palette"><span class="group-label">Color</span><button class="choice" data-color="spectrum" aria-pressed="true">Spectrum</button><button class="choice" data-color="amber" aria-pressed="false">Amber</button><button class="choice" data-color="aurora" aria-pressed="false">Aurora</button><button class="choice" data-color="ocean" aria-pressed="false">Blue</button><button class="choice" data-color="violet" aria-pressed="false">Violet</button><button class="choice" data-color="rose" aria-pressed="false">Rose</button></div>
       </div>
       <div class="dock-row">
         <div class="group" role="group" aria-label="Choose light pattern"><span class="group-label">Pattern</span><button class="choice" data-pattern="linear" aria-pressed="true" title="Structured horizontal light patterns">Linear</button><button class="choice" data-pattern="organic" aria-pressed="false" title="Continuous curved light">Waves</button></div>
@@ -590,7 +590,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 <script>
 (function(){'use strict';
   var room=document.getElementById('room');
-  var colorSets={spectrum:['#f2bb63','#6ddafd'],aurum:['#f2cd91','#84d6d2'],aurora:['#9eeac3','#91cee5'],ocean:['#9ecbfa','#7fdfe6'],violet:['#cfb8f7','#9dcae7'],rose:['#f0b6ca','#e5c18f']};
+  var colorSets={spectrum:['#f2bb63','#6ddafd'],amber:['#f2cd91','#84d6d2'],aurora:['#9eeac3','#91cee5'],ocean:['#9ecbfa','#7fdfe6'],violet:['#cfb8f7','#9dcae7'],rose:['#f0b6ca','#e5c18f']};
   var scene='pyramid',color='spectrum',power='radiant',motion=true,speed='surge',pattern='linear';
   var reduce=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
 
@@ -599,7 +599,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
   var fieldGroups={'pyramid':['pyramid-left','pyramid-right'],halo:['halo'],bloom:['bloom'],flower:['flower'],cube:['cube-top','cube-left','cube-right'],prism:['prism']};
   var fieldColors={
     spectrum:['#23dcff','#567aff','#cd56fa','#ff4fa6','#fec157','#43e5a5','#ff745d'],
-    aurum:['#f2cd91','#84d6d2','#aab8f7','#e9adcf','#b5e9e2'],
+    amber:['#f2cd91','#84d6d2','#aab8f7','#e9adcf','#b5e9e2'],
     aurora:['#9eeac3','#91cee5','#b1acfa','#f0bfd6','#e0f9ce'],
     ocean:['#9ecbfa','#7fdfe6','#a6aaf9','#c1eeff','#d6b7ee'],
     violet:['#cfb8f7','#9dcae7','#edb6dc','#9cb8fa','#ead6aa'],
@@ -637,7 +637,7 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
   }
   function drawField(){
     if(!fieldReady)return;
-    var names=fieldGroups[scene],colors=fieldColors[color]||fieldColors.aurum;
+    var names=fieldGroups[scene],colors=fieldColors[color]||fieldColors.amber;
     for(var k=0;k<names.length;k++){
       var paths=fieldPaths[names[k]],reverse=(names[k]==='pyramid-right'||scene==='bloom')?-1:1;
       for(var band=0;band<fieldCarriers[names[k]].length;band++)

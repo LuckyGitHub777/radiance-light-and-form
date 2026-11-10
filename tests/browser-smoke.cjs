@@ -22,7 +22,7 @@ function check(fullscreen,protocol){
  const room=make('room');
  const groups=[
   ['scene',['pyramid','halo','bloom','flower','cube','prism'],'pyramid'],
-  ['color',['spectrum','aurum','aurora','ocean','violet','rose'],'spectrum'],
+  ['color',['spectrum','amber','aurora','ocean','violet','rose'],'spectrum'],
   ['power',['soft','balanced','radiant'],'radiant'],
   ['pattern',['linear','organic'],'linear'],
   ['speed',['flow','vivid','surge'],'surge']
