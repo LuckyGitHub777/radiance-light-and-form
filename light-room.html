@@ -12,7 +12,7 @@
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://luckygithub777.github.io/radiance-light-and-form/">
 <title>Radiance — Light Room</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-o8CpA3tH2FE/XSufnruyA6zXP9vRdyzVvPfPD0RBZNw='; script-src 'sha256-+3GwfX/EbAJtZhlm6jCi8VH+cxQX6HoVnUUwFaYFMwo='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-+nPE3UPHZBpTe+2qDH4ZQZN8nnUSDEO1FtqUkN74BSo='; script-src 'sha256-AppZOMcJKCBrB67rfrEkrCyEU94mHe0dz98kGhFQFnA='; img-src data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <style>
 :root{--hue-a:#f2cd91;--hue-b:#84d6d2;--hue-c:#d5a76b;--vignette:#070b13;--text:#f4f0e8;--muted:#b6c2cb}
 *{box-sizing:border-box}
@@ -191,6 +191,12 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
 .flower-geometry{transform-origin:360px 270px}
 .room.moving .flower-geometry{animation:orbit-art 50s linear infinite}
 .room.speed-surge.moving .flower-geometry{animation-duration:25s}
+
+/* Continuous carrier light prevents visually empty cycles between moving marks. */
+.room.pattern-linear .light-carrier{opacity:.20}
+.room.pattern-linear.power-soft .light-carrier{opacity:.10}
+.room.pattern-linear.power-radiant .light-carrier{opacity:.26}
+.room.pattern-organic .light-carrier{opacity:0}
 </style>
 </head>
 <body>
@@ -598,13 +604,25 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
     violet:['#cfb8f7','#9dcae7','#edb6dc','#9cb8fa','#ead6aa'],
     rose:['#f0b6ca','#e5c18f','#b9a5e8','#ffdbbd','#9fcedb']
   };
-  var fieldPaths={},fieldReady=false,fieldFrame=0,fieldLast=0,fieldTime=0;
+  var fieldPaths={},fieldCarriers={},fieldReady=false,fieldFrame=0,fieldLast=0,fieldTime=0;
   function initField(){
     if(fieldReady)return;
     var names=['pyramid-left','pyramid-right','halo','bloom','flower','cube-top','cube-left','cube-right','prism'];
     for(var k=0;k<names.length;k++){
-      var root=document.getElementById('field-'+names[k]);fieldPaths[names[k]]=[];
+      var root=document.getElementById('field-'+names[k]);fieldPaths[names[k]]=[];fieldCarriers[names[k]]=[];
       if(!root)continue;
+      /* Three subtle, unbroken horizontal carriers span each clipped form.
+         They remain present while the brighter fragments flow above them. */
+      for(var band=0;band<3;band++){
+        var carrier=document.createElementNS('http://www.w3.org/2000/svg','path'),carrierD='';
+        for(var q=0;q<34;q++)if(q%3===band)carrierD+='M115 '+(20+q*16)+'h490 ';
+        carrier.setAttribute('class','light-carrier');
+        carrier.setAttribute('d',carrierD);
+        carrier.setAttribute('fill','none');
+        carrier.setAttribute('stroke-width','0.9');
+        carrier.setAttribute('stroke','#23dcff');
+        root.appendChild(carrier);fieldCarriers[names[k]].push(carrier);
+      }
       var count=names[k]==='flower'?40:names[k].indexOf('cube-')===0?30:52;
       for(var i=0;i<count;i++){
         var p=document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -621,8 +639,13 @@ h1{font-size:clamp(29px,4.25vw,61px);font-weight:300;letter-spacing:-.035em;line
     var names=fieldGroups[scene],colors=fieldColors[color]||fieldColors.aurum;
     for(var k=0;k<names.length;k++){
       var paths=fieldPaths[names[k]],reverse=(names[k]==='pyramid-right'||scene==='bloom')?-1:1;
+      for(var band=0;band<fieldCarriers[names[k]].length;band++)
+        fieldCarriers[names[k]][band].setAttribute('stroke',colors[(band+2*k)%colors.length]);
+      /* Exactly fill the 690-unit cycle, including Flower (40 rows) and Cube
+         (30 rows per face). Fixed 13.2 spacing previously left dark intervals. */
+      var spacing=690/paths.length;
       for(var i=0;i<paths.length;i++){
-        var offset=i*13.2+fieldTime*(pattern==='linear'?6.1:7.8)*reverse+k*9;
+        var offset=i*spacing+fieldTime*(pattern==='linear'?6.1:7.8)*reverse+k*9;
         var base=((offset%690)+690)%690-92;
         var d='',x,y;
         if(pattern==='linear'){
